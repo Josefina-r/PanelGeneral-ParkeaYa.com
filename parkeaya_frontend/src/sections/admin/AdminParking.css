@@ -1,0 +1,783 @@
+/* AdminParking.css - ESTILOS PARA GESTIÓN DE ESTACIONAMIENTOS ADMIN */
+.admin-parking {
+  padding: 0;
+  animation: slideIn 0.5s ease-out;
+}
+
+/* 🔥 HEADER */
+.admin-parking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.admin-parking-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.admin-parking-header p {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--admin-gradient);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.refresh-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* 📊 ESTADÍSTICAS DE ESTACIONAMIENTOS */
+.parking-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.parking-stats .stat-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.parking-stats .stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--admin-primary);
+}
+
+.parking-stats .stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+}
+
+.parking-stats .stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.parking-stats .stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 🎛️ CONTROLES Y FILTROS */
+.parking-controls {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.filters-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.75rem;
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 🚀 ACCIONES MASIVAS */
+.bulk-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid var(--admin-primary);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.bulk-actions span {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.bulk-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.bulk-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bulk-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-approve {
+  background: var(--success);
+  color: white;
+}
+
+.btn-suspend {
+  background: var(--warning);
+  color: white;
+}
+
+.btn-approve:hover:not(:disabled),
+.btn-suspend:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 📋 TABLA DE ESTACIONAMIENTOS */
+.parking-table-container {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.parking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.parking-table th {
+  background: rgba(102, 126, 234, 0.1);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--dark-border);
+  white-space: nowrap;
+}
+
+.parking-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--dark-border);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.parking-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.parking-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(5px);
+}
+
+.parking-table tbody tr.parking-pending {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.parking-table tbody tr.parking-suspended {
+  background: rgba(239, 68, 68, 0.05);
+  opacity: 0.7;
+}
+
+.parking-table tbody tr.parking-rejected {
+  background: rgba(148, 163, 184, 0.05);
+  opacity: 0.5;
+}
+
+.parking-table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* 🏢 INFORMACIÓN DEL ESTACIONAMIENTO */
+.parking-name {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.parking-name strong {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.parking-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.feature-tag {
+  background: rgba(102, 126, 234, 0.2);
+  color: var(--admin-primary);
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border: 1px solid var(--admin-primary);
+}
+
+/* 👤 INFORMACIÓN DEL PROPIETARIO */
+.owner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.owner-info strong {
+  font-size: 0.9rem;
+}
+
+.owner-info small {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* 📍 DIRECCIÓN */
+.address-cell {
+  max-width: 200px;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* 🅿️ INFORMACIÓN DE ESPACIOS */
+.spots-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.available {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.total {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* 📊 BARRA DE OCUPACIÓN */
+.occupancy-bar {
+  position: relative;
+  background: var(--dark-border);
+  border-radius: 10px;
+  height: 20px;
+  min-width: 80px;
+  overflow: hidden;
+}
+
+.occupancy-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  background: linear-gradient(90deg, var(--success), var(--warning));
+}
+
+.occupancy-bar span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+/* ⭐ RATING */
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--warning);
+}
+
+.rating i {
+  font-size: 0.8rem;
+}
+
+.rating span {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.rating small {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+/* 🏷️ BADGES DE ESTADO Y TIPO */
+.status-badge, .type-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.status-badge.status-active {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.status-badge.status-pending {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+  border: 1px solid var(--warning);
+}
+
+.status-badge.status-suspended {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+.status-badge.status-rejected {
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--text-secondary);
+  border: 1px solid var(--text-secondary);
+}
+
+.type-badge.type-premium {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+  border: 1px solid #a855f7;
+}
+
+.type-badge.type-standard {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--info);
+  border: 1px solid var(--info);
+}
+
+.type-badge.type-economy {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid #22c55e;
+}
+
+/* 🔧 ACCIONES DE ESTACIONAMIENTO */
+.parking-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.parking-actions button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.parking-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.parking-actions button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-approve {
+  background: var(--success);
+  color: white;
+}
+
+.btn-reject {
+  background: var(--error);
+  color: white;
+}
+
+.btn-activate {
+  background: var(--success);
+  color: white;
+}
+
+.btn-suspend {
+  background: var(--warning);
+  color: white;
+}
+
+.btn-view, .btn-edit {
+  background: var(--info);
+  color: white;
+  padding: 0.4rem !important;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🚫 SIN ESTACIONAMIENTOS */
+.no-parkings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.no-parkings i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* ⚠️ MENSAJES DE ERROR */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  color: var(--error);
+  margin-bottom: 1rem;
+}
+
+.error-message i {
+  font-size: 1.1rem;
+}
+
+/* 🔍 DEBUG INFO */
+.debug-info {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--dark-card);
+  border-radius: 8px;
+  border: 1px solid var(--dark-border);
+}
+
+.debug-info summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+
+.debug-info p {
+  margin: 0.5rem 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* 🪟 MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--dark-card);
+  border-radius: 16px;
+  border: 1px solid var(--dark-border);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-hard);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.modal-body p {
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.modal-body strong {
+  color: var(--text-primary);
+}
+
+.features-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* 🌀 ESTADOS DE CARGA */
+.admin-parking-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.admin-parking-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--admin-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.admin-parking-loading p {
+  color: var(--text-secondary);
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 1200px) {
+  .parking-table {
+    font-size: 0.8rem;
+  }
+  
+  .parking-table th,
+  .parking-table td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-parking-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .filters-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .parking-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .bulk-actions {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .parking-table-container {
+    overflow-x: auto;
+  }
+  
+  .parking-table {
+    min-width: 1000px;
+  }
+  
+  .parking-actions {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .parking-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    margin: 1rem;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .parking-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .parking-stats .stat-value {
+    font-size: 2rem;
+  }
+}
+
+/* 🎯 ANIMACIONES */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ✨ EFECTOS DE HOVER MEJORADOS */
+.parking-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.parking-table tbody tr:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+.filter-group select:hover,
+.filter-group input:hover {
+  border-color: var(--admin-primary);
+}
+
+/* 🎨 COLORES PARA ESTADOS EN TABLA */
+.parking-table tbody tr.parking-pending:hover {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.parking-table tbody tr.parking-suspended:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.parking-table tbody tr.parking-active:hover {
+  background: rgba(16, 185, 129, 0.1);
+}

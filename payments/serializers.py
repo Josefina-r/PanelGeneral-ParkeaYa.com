@@ -65,7 +65,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class CreatePaymentSerializer(serializers.ModelSerializer):
-    """Serializer específico para creación de pagos"""
+   
     token_pago = serializers.CharField(write_only=True, required=False)
     
     class Meta:
@@ -98,7 +98,7 @@ class CreatePaymentSerializer(serializers.ModelSerializer):
                 'token_pago': 'Se requiere token de pago para tarjeta'
             })
 
-        # Para Yape/Plin, no se necesita token
+        # Para Yape/Plin
         if metodo in ['yape', 'plin'] and token_pago:
             raise serializers.ValidationError({
                 'token_pago': 'No se requiere token para Yape/Plin'

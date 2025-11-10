@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from datetime import time
+from decimal import Decimal
 
 
 class ParkingLot(models.Model):
@@ -54,11 +55,40 @@ class ParkingLot(models.Model):
         else:
             return ahora >= self.horario_apertura or ahora <= self.horario_cierre
 
+    def calcular_costo_reserva(self, tipo_reserva, duracion_minutos, tipo_vehiculo):
+        """
+        Calcular costo de reserva - método placeholder
+        TODO: Implementar lógica real con multiplicadores
+        """
+        precio_base_por_minuto = float(self.tarifa_hora) / 60.0
+
+        # Multiplicadores básicos por tipo de vehículo
+        multiplicadores = {
+            'auto': 1.0,
+            'moto': 0.7,
+            'camioneta': 1.3
+        }
+
+        multiplicador = multiplicadores.get(tipo_vehiculo, 1.0)
+
+        # Cálculo básico según tipo de reserva
+        if tipo_reserva == 'hora':
+            costo = precio_base_por_minuto * duracion_minutos * multiplicador
+        elif tipo_reserva == 'dia':
+            costo = float(self.tarifa_hora) * 24 * (duracion_minutos / 1440) * multiplicador
+        elif tipo_reserva == 'mes':
+            costo = float(self.tarifa_hora) * 24 * 30 * (duracion_minutos / 43200) * multiplicador
+        else:
+            costo = precio_base_por_minuto * duracion_minutos * multiplicador
+
+        return Decimal(str(round(costo, 2)))
+
 
 class ParkingImage(models.Model):
     estacionamiento = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='imagenes')
     imagen = models.ImageField(upload_to='parking_images/')
     descripcion = models.CharField(max_length=100, blank=True)
+    creado_en = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f"Imagen de {self.estacionamiento.nombre}"
@@ -90,8 +120,8 @@ class ParkingApprovalRequest(models.Model):
         ('APPROVED', 'Aprobado'),
         ('REJECTED', 'Rechazado'),
     ]
-    
-    # Información del estacionamiento (igual que ParkingLot)
+
+    # Información del estacionamiento
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
     coordenadas = models.CharField(max_length=100, blank=True)
@@ -107,39 +137,39 @@ class ParkingApprovalRequest(models.Model):
     tarifa_hora = models.DecimalField(max_digits=6, decimal_places=2)
     total_plazas = models.PositiveIntegerField()
     plazas_disponibles = models.PositiveIntegerField()
-    
+
     # Servicios adicionales
     servicios = models.JSONField(default=list, blank=True)
-    
+
     # Información de la solicitud
     panel_local_id = models.CharField(max_length=100)
     notas_aprobacion = models.TextField(blank=True)
     motivo_rechazo = models.TextField(blank=True)
-    
+
     # Estado y auditoría
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
     solicitado_por = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE, 
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
         related_name='solicitudes_aprobacion'
     )
     revisado_por = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
         related_name='solicitudes_revisadas'
     )
-    
+
     # Timestamps
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
     fecha_revision = models.DateTimeField(null=True, blank=True)
-    
+
     # Relación con el estacionamiento creado
     estacionamiento_creado = models.OneToOneField(
-        ParkingLot, 
-        on_delete=models.SET_NULL, 
-        null=True, 
+        ParkingLot,
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
         related_name='solicitud_aprobacion'
     )
@@ -159,11 +189,11 @@ class ParkingApprovalRequest(models.Model):
         # Si se aprueba y no tiene estacionamiento creado, crearlo
         if self.status == 'APPROVED' and not self.estacionamiento_creado:
             self.crear_estacionamiento()
-        
-        # Si se rechaza, guardar fecha de revisión
+
+        # Si se rechaza o aprueba, registrar fecha de revisión
         if self.status in ['APPROVED', 'REJECTED'] and not self.fecha_revision:
             self.fecha_revision = timezone.now()
-            
+
         super().save(*args, **kwargs)
 
     def crear_estacionamiento(self):
@@ -186,7 +216,6 @@ class ParkingApprovalRequest(models.Model):
                 activo=True
             )
             self.estacionamiento_creado = parking
-            # Llamar a save() sin argumentos para evitar recursión
             super().save(update_fields=['estacionamiento_creado'])
             return parking
         except Exception as e:

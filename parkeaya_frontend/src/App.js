@@ -9,6 +9,24 @@ function App() {
     return localStorage.getItem('access_token') !== null;
   };
 
+  const getUserRole = () => {
+    return localStorage.getItem('user_role') || 'user';
+  };
+
+  // Componente protegido por roles
+  const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+    if (!isAuthenticated()) {
+      return <Navigate to="/login" />;
+    }
+    
+    const userRole = getUserRole();
+    if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+      return <Navigate to="/dashboard" />;
+    }
+    
+    return children;
+  };
+
   return (
     <Router>
       <div className="App">
@@ -19,7 +37,11 @@ function App() {
           />
           <Route 
             path="/dashboard/*" 
-            element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />} 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
           />
           <Route 
             path="/" 

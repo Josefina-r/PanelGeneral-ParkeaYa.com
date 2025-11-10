@@ -1,0 +1,30 @@
+.access-denied {
+  padding: 2rem;
+  text-align: center;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  margin: 2rem auto;
+  max-width: 560px;
+}
+
+.access-denied h2 {
+  color: #c0392b;
+  margin-bottom: 0.5rem;
+}
+
+.access-denied p {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.access-denied .back-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.access-denied .back-btn:hover { background: #155fa0; }

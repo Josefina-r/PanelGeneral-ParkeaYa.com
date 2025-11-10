@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+/*import React, { useState, useEffect } from 'react';
 import './Home.css';
 
 function Home({ stats, dashboardData }) {
@@ -366,4 +366,4 @@ function Home({ stats, dashboardData }) {
   );
 }
 
-export default Home;
+export default Home;*/

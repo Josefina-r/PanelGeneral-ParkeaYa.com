@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+/**import React, { useState, useEffect } from 'react';
 import './Payments.css';
 
 function Payments() {
@@ -183,8 +183,7 @@ function Payments() {
         <h2>Gestión de Pagos</h2>
         <p>Administra los pagos del sistema Parkeaya</p>
       </div>
-
-      {/* Filtros */}
+      /**
       <div className="filters-section">
         <h3>Filtros</h3>
         <div className="filters-row">
@@ -233,8 +232,8 @@ function Payments() {
           </div>
         </div>
       </div>
-
-      {/* Estadísticas */}
+/**
+     
       <div className="stats-section">
         <div className="stat-card">
           <h3>Total Recaudado</h3>
@@ -264,7 +263,7 @@ function Payments() {
         </div>
       </div>
 
-      {/* Lista de Pagos */}
+      
       <div className="payments-section">
         <div className="section-header">
           <h3>Historial de Pagos</h3>
@@ -353,7 +352,7 @@ function Payments() {
         )}
       </div>
 
-      {/* Modal de Detalles */}
+      
       {showModal && selectedPayment && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -429,4 +428,4 @@ function Payments() {
   );
 }
 
-export default Payments;
+export default Payments; */

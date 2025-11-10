@@ -1,0 +1,168 @@
+.violations-container {
+  padding: 20px;
+}
+
+.violations-header {
+  margin-bottom: 24px;
+}
+
+.violations-header h2 {
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filters select,
+.filters input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 200px;
+}
+
+.filters input {
+  flex: 1;
+}
+
+.violations-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background-color: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #b91c1c;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.violations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.violation-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 16px;
+  border-left: 4px solid #ddd;
+}
+
+.violation-card.status-pending { border-left-color: #f59e0b; }
+.violation-card.status-in_review { border-left-color: #3b82f6; }
+.violation-card.status-resolved { border-left-color: #10b981; }
+.violation-card.status-dismissed { border-left-color: #6b7280; }
+
+.violation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.violation-header h3 {
+  margin: 0;
+  color: #1f2937;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-badge.pending { background: #fef3c7; color: #92400e; }
+.status-badge.in_review { background: #dbeafe; color: #1e40af; }
+.status-badge.resolved { background: #d1fae5; color: #065f46; }
+.status-badge.dismissed { background: #f3f4f6; color: #374151; }
+
+.violation-details {
+  margin-bottom: 16px;
+}
+
+.violation-details p {
+  margin: 8px 0;
+  color: #4b5563;
+}
+
+.violation-description {
+  font-style: italic;
+  color: #6b7280;
+}
+
+.violation-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.violation-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-review {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-review:hover {
+  background: #2563eb;
+}
+
+.btn-resolve {
+  background: #10b981;
+  color: white;
+}
+
+.btn-resolve:hover {
+  background: #059669;
+}
+
+.btn-dismiss {
+  background: #6b7280;
+  color: white;
+}
+
+.btn-dismiss:hover {
+  background: #4b5563;
+}
+
+.no-violations {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 8px;
+}

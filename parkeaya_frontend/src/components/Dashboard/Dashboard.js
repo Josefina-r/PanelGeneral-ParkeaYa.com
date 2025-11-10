@@ -2,144 +2,285 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import Home from '../sections/Home';
-import Users from '../sections/Users';
-import Parking from '../sections/Parking';
-import Reservations from '../sections/Reservations';
-import Payments from '../sections/Payments';
-import Violations from '../sections/Violations';
 import './Dashboard.css';
+
+/* Disable exhaustive-deps warnings in this file for now -
+  loadDashboardData and related helpers rely on several helpers
+  and state; we intentionally keep the initial effect deps minimal.
+  If you want stricter hook checks later, we can refactor into
+  useCallback/useMemo for the helper functions. */
+/* eslint-disable react-hooks/exhaustive-deps */
+
+//  IMPORTACIONES POR ROL - ADMIN
+import AdminHome from '../../sections/admin/AdminHome';
+import AdminUsers from '../../sections/admin/AdminUsers';
+import AdminParking from '../../sections/admin/AdminParking';
+import AdminReports from '../../sections/admin/AdminReports';
+import AdminFinance from '../../sections/admin/AdminFinance';
+/*import AdminSystem from '../../sections/admin/AdminSystem';*/
+import AccessDenied from '../AccessDenied';  
+
+//  IMPORTACIONES POR ROL - OWNER
+import OwnerHome from '../../sections/owner/OwnerHome';
+import OwnerParking from '../../sections/owner/OwnerParking';
+import OwnerReservations from '../../sections/owner/OwnerReservations';
+import OwnerReports from '../../sections/owner/OwnerReports';
+import OwnerProfile from '../../sections/owner/OwnerProfile';
+
 
 function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [globalStats, setGlobalStats] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Routes are rendered later inline inside the return statement per userRole
+
   const API_BASE = 'http://localhost:8000/api';
 
-  // ✅ CORRECCIÓN: Usar JWT Bearer token
   const getAuthHeaders = () => {
     const token = localStorage.getItem('access_token');
-    console.log('🔐 JWT Token encontrado:', token ? 'Sí' : 'No');
     return {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}` // ← JWT usa Bearer
+      'Authorization': `Bearer ${token}`
     };
   };
 
+  // OBTENER ENDPOINT SEGÚN ROL
+  const getDashboardEndpoint = () => {
+    const role = localStorage.getItem('user_role');
+    console.log(`🎯 Cargando dashboard para: ${role}`);
+    
+    switch(role) {
+      case 'admin':
+        return '/users/admin/dashboard/stats/';
+      case 'owner':
+        return '/users/owner/dashboard/stats/';
+      default:
+        return '/users/client/dashboard/stats/';
+    }
+  };
+
+  // PERMISOS ESPECÍFICOS POR ROL
+  const getRolePermissions = () => {
+    return {
+      admin: {
+        home: true,
+        users: true,           // Gestión de usuarios
+        parking: true,         // Gestión global estacionamientos
+        reports: true,         // Reportes y analytics
+        finance: true,         // Gestión financiera
+        system: true,          // Configuración del sistema
+        reservations: false,   // Owner-specific
+        ownerProfile: false    // Owner-specific
+      },
+      owner: {
+        home: true,
+        users: false,          // Solo admin
+        parking: true,         // Gestión de MI estacionamiento
+        reports: true,         // Reportes locales
+        finance: false,        // Solo admin
+        system: false,         // Solo admin
+        reservations: true,    // Gestión de reservas
+        ownerProfile: true     // Perfil de negocio
+      }
+    };
+  };
+
+  const canAccessSection = (section) => {
+    const role = localStorage.getItem('user_role');
+    const permissions = getRolePermissions();
+    return permissions[role]?.[section] || false;
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    console.log('=== 🔍 DEBUG COMPLETO DEL LOCALSTORAGE ===');
-    console.log('access_token:', localStorage.getItem('access_token'));
-    console.log('refresh_token:', localStorage.getItem('refresh_token'));
-    console.log('user:', localStorage.getItem('user'));
+    console.log('=== 🚀 INICIANDO DASHBOARD CON ROLES ESPECÍFICOS ===');
     
     const userData = localStorage.getItem('user');
     const token = localStorage.getItem('access_token');
+    const role = localStorage.getItem('user_role');
     
-    console.log('Verificando autenticación:', { 
-      userData: userData ? 'Presente' : 'Faltante',
-      token: token ? 'Presente' : 'Faltante'
+    console.log('📊 Estado inicial:', {
+      usuario: userData ? '✅' : '❌',
+      token: token ? '✅' : '❌', 
+      rol: role || '❌ No definido'
     });
 
-    if (userData && token) {
-      setUser(JSON.parse(userData));
+    if (userData && token && role) {
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      setUserRole(role);
+      console.log(`👤 Usuario: ${parsedUser.username}, Rol: ${role}`);
       loadDashboardData();
     } else {
-      console.log('❌ Redirigiendo a login - falta token o usuario');
+      console.log('❌ Faltan credenciales, redirigiendo a login...');
       navigate('/login');
     }
   }, [navigate]);
 
   const loadDashboardData = async () => {
+    setLoading(true);
     try {
-      console.log('🔄 Cargando datos del dashboard con JWT...');
+      const dashboardEndpoint = getDashboardEndpoint();
+      console.log(`📊 Endpoint del dashboard: ${dashboardEndpoint}`);
       
-      // PRIMERO: Verificar autenticación con endpoint de usuarios
-      console.log('🔐 Testeando autenticación JWT con /users/users/');
-      const authTest = await fetch(`${API_BASE}/users/users/`, {
+      const response = await fetch(`${API_BASE}${dashboardEndpoint}`, {
+        method: 'GET',
         headers: getAuthHeaders()
       });
-      
-      console.log('👤 Auth test status:', authTest.status);
-      
-      if (authTest.ok) {
-        console.log('✅ Autenticación JWT confirmada, cargando dashboard...');
-        
-        // Ahora cargar dashboard
-        const response = await fetch(`${API_BASE}/parking/dashboard/data/`, {
-          method: 'GET',
-          headers: getAuthHeaders()
-        });
 
-        console.log('📊 Dashboard response status:', response.status);
+      console.log('📡 Status respuesta dashboard:', response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Datos del dashboard recibidos:', data);
+        setDashboardData(data);
+        processStatsByRole(data);
         
-        if (response.ok) {
-          const data = await response.json();
-          console.log('✅ Datos del dashboard recibidos:', data);
-          setDashboardData(data);
-          
-          if (data.stats) {
-            setGlobalStats({
-              totalUsers: data.stats.total_users || 0,
-              availableParkings: data.stats.active_parkings || 0,
-              totalRevenue: data.stats.today_revenue || 0,
-              activeReservations: data.stats.active_reservations || 0
-            });
-          }
-        } else if (response.status === 401) {
-          console.error('❌ Error 401 - JWT token inválido o expirado');
-          handleAuthError();
-        } else {
-          console.error('❌ Error loading dashboard:', response.status);
-          await loadGlobalStats(); // Fallback
-        }
-      } else {
-        console.error('❌ Auth test failed:', authTest.status);
+      } else if (response.status === 401) {
         handleAuthError();
+      } else if (response.status === 403) {
+        handleAccessDenied();
+      } else {
+        await loadFallbackData();
       }
     } catch (error) {
-      console.error('💥 Error loading dashboard data:', error);
-      await loadGlobalStats(); // Fallback
+      console.error('💥 Error crítico:', error);
+      await loadFallbackData();
+    } finally {
+      setLoading(false);
     }
   };
 
-  const loadGlobalStats = async () => {
+  //  PROCESAR ESTADÍSTICAS ESPECÍFICAS POR ROL
+  const processStatsByRole = (data) => {
+    const role = localStorage.getItem('user_role');
+    
+    if (role === 'admin') {
+      // 📊 ESTADÍSTICAS PARA ADMINISTRADOR
+      setGlobalStats({
+        // Gestión de Usuarios
+        totalUsers: data.total_users || 0,
+        totalOwners: data.total_owners || 0,
+        pendingApprovals: data.pending_approvals || 0,
+        
+        // Gestión Global de Estacionamientos
+        totalParkings: data.total_parkings || 0,
+        activeParkings: data.active_parkings || 0,
+        pendingParkings: data.pending_parkings || 0,
+        
+        // Reportes y Analytics
+        totalRevenue: data.total_revenue || 0,
+        todayRevenue: data.today_revenue || 0,
+        platformEarnings: data.platform_earnings || 0,
+        
+        // Reservas activas
+        activeReservations: data.active_reservations || 0,
+        completedToday: data.completed_today || 0,
+        
+        // Incidencias
+        activeViolations: data.active_violations || 0,
+        pendingComplaints: data.pending_complaints || 0
+      });
+    } else if (role === 'owner') {
+      // 📊 ESTADÍSTICAS PARA PROPIETARIO
+      setGlobalStats({
+        // Mi Estacionamiento
+        totalSpots: data.total_spots || 0,
+        availableSpots: data.available_spots || 0,
+        occupancyRate: data.occupancy_rate || 0,
+        
+        // Control de Capacidad
+        reservedSpots: data.reserved_spots || 0,
+        occupiedSpots: data.occupied_spots || 0,
+        
+        // Gestión de Reservas
+        activeReservations: data.active_reservations || 0,
+        todayReservations: data.today_reservations || 0,
+        pendingReservations: data.pending_reservations || 0,
+        
+        // Reportes Locales
+        todayRevenue: data.today_revenue || 0,
+        monthlyRevenue: data.monthly_revenue || 0,
+        weeklyEarnings: data.weekly_earnings || 0,
+        
+        // Métricas de Negocio
+        rating: data.average_rating || 0,
+        totalReviews: data.total_reviews || 0
+      });
+    }
+  };
+
+  const loadFallbackData = async () => {
     try {
-      const response = await fetch(`${API_BASE}/parking/admin/dashboard-stats/`, {
+      const role = localStorage.getItem('user_role');
+  // default to client stats (no double-spaces)
+  let fallbackEndpoint = '/users/client/dashboard/stats/';
+      
+      if (role === 'admin') {
+        fallbackEndpoint = '/users/admin/dashboard/stats/';
+      } else if (role === 'owner') {
+        fallbackEndpoint = '/users/owner/dashboard/stats/';
+      }
+
+      const response = await fetch(`${API_BASE}${fallbackEndpoint}`, {
         headers: getAuthHeaders()
       });
       
       if (response.ok) {
         const data = await response.json();
-        setGlobalStats(data);
-      } else if (response.status === 401) {
-        handleAuthError();
+        setDashboardData(data);
+        processStatsByRole(data);
       }
     } catch (error) {
-      console.error('💥 Error loading global stats:', error);
+      console.error('💥 Error cargando datos de respaldo:', error);
     }
   };
 
   const handleAuthError = () => {
-    console.log('🔐 Error de autenticación JWT, limpiando datos...');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    localStorage.clear();
     navigate('/login');
   };
 
+  const handleAccessDenied = () => {
+    navigate('/dashboard/home');
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    localStorage.clear();
     window.location.href = '/login';
   };
 
+  //  COMPONENTE DE CARGA MEJORADO
+  if (loading) {
+    return (
+      <div className="dashboard-loading">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">
+          <h3>Inicializando Panel {userRole === 'admin' ? 'Administrativo' : 'de Propietario'}</h3>
+          <p>Cargando datos específicos para {user?.username}...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
-    return <div className="loading">Cargando...</div>;
+    return (
+      <div className="dashboard-error">
+        <div className="error-content">
+          <h2>Error de Autenticación</h2>
+          <p>No se pudo cargar la información del usuario</p>
+          <button onClick={() => navigate('/login')} className="retry-btn">
+            Volver al Login
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -149,12 +290,15 @@ function Dashboard() {
         currentPath={location.pathname}
         onNavigate={navigate}
         stats={globalStats}
-        userRole={dashboardData?.user?.role}
+        userRole={userRole}
+        userData={user}
+        canAccessSection={canAccessSection}
       />
       
       <div className={`dashboard-main ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
         <Header 
           user={user}
+          userRole={userRole}
           dashboardData={dashboardData}
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           onLogout={handleLogout}
@@ -163,19 +307,42 @@ function Dashboard() {
         
         <div className="dashboard-content">
           <Routes>
-            <Route 
-              path="/" 
-              element={<Home stats={globalStats} dashboardData={dashboardData} />} 
-            />
-            <Route 
-              path="/home" 
-              element={<Home stats={globalStats} dashboardData={dashboardData} />} 
-            />
-            <Route path="/users" element={<Users />} />
-            <Route path="/parking" element={<Parking />} />
-            <Route path="/reservations" element={<Reservations />} />
-            <Route path="/payments" element={<Payments />} />
-            <Route path="/violations" element={<Violations />} />
+            {/*  RUTAS PARA ADMINISTRADOR */}
+            {userRole === 'admin' && (
+              <>
+                <Route path="/" element={<AdminHome stats={globalStats} user={user} />} />
+                <Route path="/home" element={<AdminHome stats={globalStats} user={user} />} />
+                <Route path="/users" element={<AdminUsers />} />
+                <Route path="/parking" element={<AdminParking />} />
+                <Route path="/reports" element={<AdminReports />} />
+                <Route path="/finance" element={<AdminFinance />} />
+
+              {/* <Route path="/system" element={<AdminSystem />} /> */}
+              </>
+            )}
+
+            {/*  RUTAS PARA PROPIETARIO */}
+            {userRole === 'owner' && (
+              <>
+                <Route path="/" element={<OwnerHome stats={globalStats} user={user} />} />
+                <Route path="/home" element={<OwnerHome stats={globalStats} user={user} />} />
+                <Route path="/parking" element={<OwnerParking />} />
+                <Route path="/reservations" element={<OwnerReservations />} />
+                <Route path="/reports" element={<OwnerReports />} />
+                <Route path="/profile" element={<OwnerProfile />} />
+              </>
+            )}
+
+            {/* RUTA DE FALLBACK PARA ROLES NO RECONOCIDOS */}
+            <Route path="*" element={
+              <div className="access-denied">
+                <h2>Configuración de Rol Incorrecta</h2>
+                <p>Tu rol ({userRole}) no está configurado correctamente.</p>
+                <button onClick={handleLogout} className="logout-btn">
+                  Cerrar Sesión
+                </button>
+              </div>
+            } />
           </Routes>
         </div>
       </div>
