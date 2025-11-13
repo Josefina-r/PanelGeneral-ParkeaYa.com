@@ -31,7 +31,7 @@ const OwnerHome = ({ userRole }) => {
       console.log('🏢 Cargando dashboard del propietario...');
       
       // Endpoint específico para dueños
-      const response = await fetch(`${API_BASE}/users/owner/dashboard/stats/`, {
+      const response = await fetch(`${API_BASE}/parking/dashboard/owner/`, {
         method: 'GET',
         headers: getAuthHeaders()
       });

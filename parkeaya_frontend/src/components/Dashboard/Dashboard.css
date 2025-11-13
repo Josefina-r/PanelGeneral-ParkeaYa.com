@@ -1,4 +1,4 @@
-/* Dashboard.css - NIVEL DIOS */
+/* Dashboard.css - NIVEL DIOS CON SCROLL FIX */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -72,24 +72,57 @@ body {
   z-index: 0;
 }
 
-/* 🔥 CONTENIDO PRINCIPAL */
+/* 🔥 CONTENIDO PRINCIPAL CON SCROLL FIX */
 .dashboard-main {
   flex: 1;
   margin-left: var(--sidebar-width);
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 1;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-main.sidebar-closed {
   margin-left: var(--sidebar-collapsed);
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
+/* 🔥 CONTENEDOR CON SCROLL */
+.dashboard-content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* 🔥 CONTENIDO PRINCIPAL */
 .dashboard-content {
   padding: 2rem;
-  min-height: calc(100vh - var(--header-height));
+  min-height: auto;
   background: transparent;
   position: relative;
+  flex: 1;
+}
+
+/* 🔥 HEADER FIJO */
+.dashboard-header {
+  background: var(--dark-card);
+  border-bottom: 1px solid var(--dark-border);
+  padding: 1rem 2rem;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+  flex-shrink: 0;
 }
 
 /* 🔥 ESTADOS DE CARGA */
@@ -246,7 +279,7 @@ body {
   box-shadow: var(--shadow-glow);
 }
 
-/* 🔥 RESPONSIVE DESIGN */
+/*  RESPONSIVE DESIGN */
 @media (max-width: 1200px) {
   .dashboard-content {
     padding: 1.5rem;
@@ -256,14 +289,22 @@ body {
 @media (max-width: 768px) {
   .dashboard-main {
     margin-left: 0;
+    height: 100vh;
+    overflow-y: auto;
   }
   
   .dashboard-main.sidebar-closed {
     margin-left: 0;
+    height: 100vh;
+    overflow-y: auto;
   }
   
   .dashboard-content {
     padding: 1rem;
+  }
+  
+  .dashboard-content-scroll {
+    height: calc(100vh - var(--header-height));
   }
   
   .dashboard-loading {
@@ -295,7 +336,7 @@ body {
   }
 }
 
-/* 🔥 ANIMACIONES */
+/*  ANIMACIONES */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -326,7 +367,7 @@ body {
   }
 }
 
-/* 🔥 UTILIDADES */
+/*  UTILIDADES */
 .glass-effect {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
@@ -351,39 +392,39 @@ body {
   box-shadow: var(--shadow-glow);
 }
 
-/* 🔥 SCROLLBAR PERSONALIZADO */
-.dashboard-content::-webkit-scrollbar {
+/*  SCROLLBAR PERSONALIZADO */
+.dashboard-content-scroll::-webkit-scrollbar {
   width: 8px;
 }
 
-.dashboard-content::-webkit-scrollbar-track {
+.dashboard-content-scroll::-webkit-scrollbar-track {
   background: var(--dark-card);
   border-radius: 4px;
 }
 
-.dashboard-content::-webkit-scrollbar-thumb {
+.dashboard-content-scroll::-webkit-scrollbar-thumb {
   background: var(--admin-gradient);
   border-radius: 4px;
 }
 
-.dashboard-content::-webkit-scrollbar-thumb:hover {
+.dashboard-content-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--admin-secondary);
 }
 
-.owner .dashboard-content::-webkit-scrollbar-thumb {
+.owner .dashboard-content-scroll::-webkit-scrollbar-thumb {
   background: var(--owner-gradient);
 }
 
-.owner .dashboard-content::-webkit-scrollbar-thumb:hover {
+.owner .dashboard-content-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--owner-secondary);
 }
 
-/* 🔥 TRANSICIONES SUAVES */
+/* TRANSICIONES SUAVES */
 .dashboard-content > * {
   animation: slideIn 0.5s ease-out;
 }
 
-/* 🔥 ESTILOS ESPECÍFICOS PARA ROLES */
+/* ESTILOS ESPECÍFICOS PARA ROLES */
 .role-admin {
   --accent-primary: var(--admin-primary);
   --accent-secondary: var(--admin-secondary);
@@ -396,7 +437,7 @@ body {
   --accent-gradient: var(--owner-gradient);
 }
 
-/* 🔥 ESTADOS DE HOVER GLOBALES */
+/*  ESTADOS DE HOVER GLOBALES */
 button {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -409,7 +450,7 @@ button:active {
   transform: translateY(0);
 }
 
-/* 🔥 CARDS BASE */
+/*  CARDS BASE */
 .dashboard-card {
   background: var(--dark-card);
   border-radius: 16px;
@@ -442,21 +483,6 @@ button:active {
   .content-grid {
     grid-template-columns: 1fr;
   }
-}
-
-/* 🔥 HEADER STYLES (para referencia) */
-.dashboard-header {
-  background: var(--dark-card);
-  border-bottom: 1px solid var(--dark-border);
-  padding: 1rem 2rem;
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(20px);
 }
 
 /* 🔥 NOTIFICACIONES Y ALERTAS */

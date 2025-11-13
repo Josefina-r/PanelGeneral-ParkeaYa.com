@@ -44,7 +44,7 @@ function Login() {
       console.log('📦 Response data COMPLETA:', data);
 
       if (response.ok) {
-        // ✅ JWT: El token viene en data.access
+        
         const token = data.access;
         
         console.log('🔑 JWT Token encontrado:', token);
@@ -71,7 +71,7 @@ function Login() {
           console.log('  user_id:', localStorage.getItem('user_id'));
           console.log('  username:', localStorage.getItem('username'));
           
-          console.log(`✅ Login exitoso! Rol: ${userRole}, redirigiendo...`);
+          console.log(` Login exitoso! Rol: ${userRole}, redirigiendo...`);
           
           // Redirigir al dashboard
           window.location.href = '/dashboard';
@@ -81,7 +81,7 @@ function Login() {
           console.error('❌', errorMsg);
         }
       } else {
-        // Manejar diferentes tipos de errores
+  
         let errorMsg = 'Error en la autenticación';
         
         if (response.status === 401) {
@@ -97,7 +97,7 @@ function Login() {
         }
         
         setError(errorMsg);
-        console.error('❌ Error en login:', errorMsg);
+        console.error(' Error en login:', errorMsg);
       }
     } catch (error) {
       console.error('💥 Error de conexión:', error);
@@ -130,7 +130,7 @@ function Login() {
     }
     
     // Si no cumple con los roles permitidos para el panel
-    console.log('❌ Usuario no tiene rol válido para panel administrativo');
+    console.log(' Usuario no tiene rol válido para panel administrativo');
     return 'none';
   };
 

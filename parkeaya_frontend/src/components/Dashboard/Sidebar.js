@@ -109,6 +109,21 @@ const getQuickStats = (stats, userRole) => {
   }
 };
 
+// Función para mapear paths a keys de permisos
+const getSectionKey = (path) => {
+  const pathMap = {
+    '/dashboard/home': 'home',
+    '/dashboard/users': 'users', 
+    '/dashboard/parking': 'parking',
+    '/dashboard/reports': 'reports',
+    '/dashboard/finance': 'finance',
+    '/dashboard/system': 'system',
+    '/dashboard/reservations': 'reservations',
+    '/dashboard/profile': 'ownerProfile'  // ← CLAVE CORREGIDA
+  };
+  return pathMap[path] || path.split('/').pop();
+};
+
 function Sidebar({ 
   isOpen, 
   currentPath, 
@@ -181,44 +196,49 @@ function Sidebar({
       
       {/*  MENÚ DE NAVEGACIÓN */}
       <nav className="sidebar-nav">
-        {menuItems.map((item) => (
-          <button
-            key={item.path}
-            className={`nav-item ${currentPath === item.path ? 'active' : ''} ${
-              !canAccessSection(item.path.split('/').pop()) ? 'disabled' : ''
-            }`}
-            onClick={() => canAccessSection(item.path.split('/').pop()) && onNavigate(item.path)}
-            style={{ 
-              '--accent-color': item.color,
-              borderLeftColor: currentPath === item.path ? item.color : 'transparent'
-            }}
-            disabled={!canAccessSection(item.path.split('/').pop())}
-          >
-            <span className="nav-icon">
-              <i className={item.icon}></i>
-              {/* 🔥 BADGE PARA ESTADÍSTICAS EN HOME */}
-              {item.badge === 'stats' && quickStats[item.badge] !== undefined && (
-                <span className="nav-badge">
-                  {userRole === 'admin' ? '📊' : '🚀'}
-                </span>
-              )}
-            </span>
-            
-            {isOpen && (
-              <div className="nav-content">
-                <span className="nav-label">{item.label}</span>
-                {item.description && (
-                  <span className="nav-description">{item.description}</span>
+        {menuItems.map((item) => {
+          const sectionKey = getSectionKey(item.path);
+          const hasAccess = canAccessSection(sectionKey);
+          
+          return (
+            <button
+              key={item.path}
+              className={`nav-item ${currentPath === item.path ? 'active' : ''} ${
+                !hasAccess ? 'disabled' : ''
+              }`}
+              onClick={() => hasAccess && onNavigate(item.path)}
+              style={{ 
+                '--accent-color': item.color,
+                borderLeftColor: currentPath === item.path ? item.color : 'transparent'
+              }}
+              disabled={!hasAccess}
+            >
+              <span className="nav-icon">
+                <i className={item.icon}></i>
+                {/*  BADGE PARA ESTADÍSTICAS EN HOME */}
+                {item.badge === 'stats' && quickStats[item.badge] !== undefined && (
+                  <span className="nav-badge">
+                    {userRole === 'admin' ? '📊' : '🚀'}
+                  </span>
                 )}
-              </div>
-            )}
-            
-            {/* INDICADOR DE ACTIVO */}
-            {currentPath === item.path && (
-              <div className="active-indicator"></div>
-            )}
-          </button>
-        ))}
+              </span>
+              
+              {isOpen && (
+                <div className="nav-content">
+                  <span className="nav-label">{item.label}</span>
+                  {item.description && (
+                    <span className="nav-description">{item.description}</span>
+                  )}
+                </div>
+              )}
+              
+              {/* INDICADOR DE ACTIVO */}
+              {currentPath === item.path && (
+                <div className="active-indicator"></div>
+              )}
+            </button>
+          );
+        })}
       </nav>
       
       {/*  FOOTER CON INFORMACIÓN DEL USUARIO */}

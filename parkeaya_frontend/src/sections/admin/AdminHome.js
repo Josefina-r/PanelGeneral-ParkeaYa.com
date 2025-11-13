@@ -279,7 +279,7 @@ const AdminHome = ({ stats, userRole }) => {
         
         <div className="info-card">
           <h3>Ingresos Plataforma</h3>
-          <div className="info-value">${(dashboardData?.platform_earnings || 0).toLocaleString()}</div>
+          <div className="info-value">S/{(dashboardData?.platform_earnings || 0).toLocaleString()}</div>
           <div className="info-label">Comisiones hoy</div>
         </div>
         
@@ -288,14 +288,6 @@ const AdminHome = ({ stats, userRole }) => {
           <div className="info-value">{dashboardData?.active_violations || 0}</div>
           <div className="info-label">Reportes abiertos</div>
         </div>
-      </div>
-
-      {/*  DEBUG INFO (solo desarrollo) */}
-      <div className="debug-info">
-        <details>
-          <summary>Debug Data</summary>
-          <pre>{JSON.stringify(dashboardData, null, 2)}</pre>
-        </details>
       </div>
     </div>
   );

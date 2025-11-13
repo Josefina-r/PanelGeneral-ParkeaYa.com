@@ -31,8 +31,8 @@ const AdminReports = ({ userRole }) => {
       
       console.log('📊 Cargando datos de analytics...');
       
-      // Cargar datos principales del dashboard
-      const analyticsResponse = await fetch(`${API_BASE}/analytics/admin/dashboard/?period=${timeRange}`, {
+      // Cargar datos principales del dashboard admin
+      const analyticsResponse = await fetch(`${API_BASE}/analytics/admin/dashboard/`, {
         method: 'GET',
         headers: getAuthHeaders()
       });
@@ -68,7 +68,7 @@ const AdminReports = ({ userRole }) => {
     try {
       console.log('💰 Cargando datos de revenue...');
       
-      const response = await fetch(`${API_BASE}/analytics/admin/revenue/?period=${timeRange}`, {
+      const response = await fetch(`${API_BASE}/analytics/admin/revenue/`, {
         method: 'GET',
         headers: getAuthHeaders()
       });
@@ -92,7 +92,7 @@ const AdminReports = ({ userRole }) => {
     try {
       console.log('👥 Cargando datos de usuarios...');
       
-      const response = await fetch(`${API_BASE}/analytics/admin/users/?period=${timeRange}`, {
+      const response = await fetch(`${API_BASE}/analytics/admin/users/`, {
         method: 'GET',
         headers: getAuthHeaders()
       });
@@ -131,20 +131,16 @@ const AdminReports = ({ userRole }) => {
       let filename = '';
       
       switch (type) {
-        case 'top_performers':
-          endpoint = `${API_BASE}/analytics/admin/dashboard/export/`;
-          filename = 'top-performers.csv';
-          break;
         case 'revenue':
-          endpoint = `${API_BASE}/analytics/admin/revenue/export/`;
+          endpoint = `${API_BASE}/analytics/admin/revenue/`;
           filename = 'revenue-report.csv';
           break;
         case 'users':
-          endpoint = `${API_BASE}/analytics/admin/users/export/`;
+          endpoint = `${API_BASE}/analytics/admin/users/`;
           filename = 'user-analytics.csv';
           break;
         default:
-          endpoint = `${API_BASE}/analytics/admin/dashboard/export/`;
+          endpoint = `${API_BASE}/analytics/admin/dashboard/`;
           filename = 'analytics-report.csv';
       }
 
@@ -208,48 +204,6 @@ const AdminReports = ({ userRole }) => {
       </div>
     );
   };
-
-  // Datos mock para desarrollo (eliminar en producción)
-  const getMockChartData = () => [
-    { date: '2024-01-08', reservations: 45, revenue: 450000 },
-    { date: '2024-01-09', reservations: 52, revenue: 520000 },
-    { date: '2024-01-10', reservations: 48, revenue: 480000 },
-    { date: '2024-01-11', reservations: 61, revenue: 610000 },
-    { date: '2024-01-12', reservations: 55, revenue: 550000 },
-    { date: '2024-01-13', reservations: 68, revenue: 680000 },
-    { date: '2024-01-14', reservations: 72, revenue: 720000 }
-  ];
-
-  const getMockTopPerformers = () => [
-    {
-      id: 1,
-      name: 'Parking Central Premium',
-      owner: 'Carlos Rodriguez',
-      reservations: 45,
-      earnings: 450000
-    },
-    {
-      id: 2,
-      name: 'Estacionamiento Norte',
-      owner: 'Ana García',
-      reservations: 32,
-      earnings: 320000
-    },
-    {
-      id: 3,
-      name: 'Parking Sur',
-      owner: 'Miguel Torres',
-      reservations: 28,
-      earnings: 280000
-    },
-    {
-      id: 4,
-      name: 'Centro Comercial Plaza',
-      owner: 'Laura Martínez',
-      reservations: 25,
-      earnings: 250000
-    }
-  ];
 
   if (loading) {
     return (
@@ -329,10 +283,10 @@ const AdminReports = ({ userRole }) => {
                   <i className="fas fa-users"></i>
                 </div>
                 <div className="metric-content">
-                  <h3>{formatNumber(analyticsData?.total_users || analyticsData?.platform_stats?.total_users || 0)}</h3>
+                  <h3>{formatNumber(analyticsData?.total_users || 0)}</h3>
                   <p>Total Usuarios</p>
                   <span className="metric-trend positive">
-                    +{analyticsData?.user_growth || analyticsData?.platform_stats?.user_growth || 0}%
+                    +{analyticsData?.user_growth || 0}%
                   </span>
                 </div>
               </div>
@@ -342,10 +296,10 @@ const AdminReports = ({ userRole }) => {
                   <i className="fas fa-money-bill-wave"></i>
                 </div>
                 <div className="metric-content">
-                  <h3>{formatCurrency(analyticsData?.total_revenue || analyticsData?.platform_stats?.total_revenue || 0)}</h3>
+                  <h3>{formatCurrency(analyticsData?.total_revenue || 0)}</h3>
                   <p>Ingresos Totales</p>
                   <span className="metric-trend positive">
-                    +{analyticsData?.revenue_growth || analyticsData?.platform_stats?.revenue_growth || 0}%
+                    +{analyticsData?.revenue_growth || 0}%
                   </span>
                 </div>
               </div>
@@ -355,10 +309,10 @@ const AdminReports = ({ userRole }) => {
                   <i className="fas fa-calendar-check"></i>
                 </div>
                 <div className="metric-content">
-                  <h3>{formatNumber(analyticsData?.active_reservations || analyticsData?.platform_stats?.active_reservations || 0)}</h3>
+                  <h3>{formatNumber(analyticsData?.active_reservations || 0)}</h3>
                   <p>Reservas Activas</p>
                   <span className="metric-info">
-                    Hoy: {analyticsData?.completed_today || analyticsData?.platform_stats?.completed_today || 0}
+                    Hoy: {analyticsData?.completed_today || 0}
                   </span>
                 </div>
               </div>
@@ -368,10 +322,10 @@ const AdminReports = ({ userRole }) => {
                   <i className="fas fa-chart-line"></i>
                 </div>
                 <div className="metric-content">
-                  <h3>{formatCurrency(analyticsData?.platform_earnings || analyticsData?.platform_stats?.platform_earnings || 0)}</h3>
+                  <h3>{formatCurrency(analyticsData?.platform_earnings || 0)}</h3>
                   <p>Ganancias Plataforma</p>
                   <span className="metric-info">
-                    {analyticsData?.commission_rate || analyticsData?.platform_stats?.commission_rate || 30}% comisión
+                    {analyticsData?.commission_rate || 30}% comisión
                   </span>
                 </div>
               </div>
@@ -383,14 +337,14 @@ const AdminReports = ({ userRole }) => {
                 <h2>Estacionamientos Más Activos</h2>
                 <button 
                   className="btn-export"
-                  onClick={() => handleExport('top_performers')}
+                  onClick={() => handleExport('overview')}
                 >
                   <i className="fas fa-download"></i>
                   Exportar
                 </button>
               </div>
               <div className="performers-grid">
-                {(analyticsData?.top_parkings || analyticsData?.top_performers || getMockTopPerformers()).map((parking, index) => (
+                {(analyticsData?.top_parkings || []).map((parking, index) => (
                   <div key={parking.id} className="performer-card">
                     <div className="performer-rank">
                       <span className={`rank-badge rank-${index + 1}`}>
@@ -399,20 +353,26 @@ const AdminReports = ({ userRole }) => {
                     </div>
                     <div className="performer-info">
                       <h4>{parking.name}</h4>
-                      <p>Propietario: {parking.owner}</p>
+                      <p>Propietario: {parking.owner_name}</p>
                       <div className="performer-stats">
                         <span className="reservations">
                           <i className="fas fa-calendar"></i>
-                          {parking.reservations} reservas
+                          {parking.reservations_count} reservas
                         </span>
                         <span className="earnings">
                           <i className="fas fa-money-bill"></i>
-                          {formatCurrency(parking.earnings)}
+                          {formatCurrency(parking.total_earnings)}
                         </span>
                       </div>
                     </div>
                   </div>
                 ))}
+                {(!analyticsData?.top_parkings || analyticsData.top_parkings.length === 0) && (
+                  <div className="no-data-placeholder">
+                    <i className="fas fa-parking"></i>
+                    <p>No hay datos de estacionamientos disponibles</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -423,7 +383,7 @@ const AdminReports = ({ userRole }) => {
                 <span>Últimos 7 días</span>
               </div>
               <div className="chart-placeholder">
-                {renderChart(analyticsData?.chart_data || getMockChartData(), 'reservations')}
+                {renderChart(analyticsData?.reservations_chart || [], 'count')}
                 <div className="chart-legend">
                   <div className="legend-item">
                     <span className="legend-color reservations"></span>
@@ -481,7 +441,7 @@ const AdminReports = ({ userRole }) => {
               
               <div className="charts-section">
                 <h3>Evolución de Ingresos</h3>
-                {renderChart(revenueData?.chart_data || getMockChartData(), 'revenue')}
+                {renderChart(revenueData?.revenue_chart || [], 'amount')}
                 <div className="chart-legend">
                   <div className="legend-item">
                     <span className="legend-color revenue"></span>
@@ -548,7 +508,7 @@ const AdminReports = ({ userRole }) => {
               
               <div className="charts-section">
                 <h3>Crecimiento de Usuarios</h3>
-                {renderChart(userData?.chart_data || getMockChartData(), 'reservations')}
+                {renderChart(userData?.users_chart || [], 'count')}
                 <div className="chart-legend">
                   <div className="legend-item">
                     <span className="legend-color users"></span>

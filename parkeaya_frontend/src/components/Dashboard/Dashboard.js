@@ -27,7 +27,6 @@ import OwnerReservations from '../../sections/owner/OwnerReservations';
 import OwnerReports from '../../sections/owner/OwnerReports';
 import OwnerProfile from '../../sections/owner/OwnerProfile';
 
-
 function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [user, setUser] = useState(null);
@@ -37,8 +36,6 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Routes are rendered later inline inside the return statement per userRole
 
   const API_BASE = 'http://localhost:8000/api';
 
@@ -162,7 +159,7 @@ function Dashboard() {
     const role = localStorage.getItem('user_role');
     
     if (role === 'admin') {
-      // 📊 ESTADÍSTICAS PARA ADMINISTRADOR
+      //  ESTADÍSTICAS PARA ADMINISTRADOR
       setGlobalStats({
         // Gestión de Usuarios
         totalUsers: data.total_users || 0,
@@ -188,7 +185,7 @@ function Dashboard() {
         pendingComplaints: data.pending_complaints || 0
       });
     } else if (role === 'owner') {
-      // 📊 ESTADÍSTICAS PARA PROPIETARIO
+      //  ESTADÍSTICAS PARA PROPIETARIO
       setGlobalStats({
         // Mi Estacionamiento
         totalSpots: data.total_spots || 0,
@@ -219,8 +216,7 @@ function Dashboard() {
   const loadFallbackData = async () => {
     try {
       const role = localStorage.getItem('user_role');
-  // default to client stats (no double-spaces)
-  let fallbackEndpoint = '/users/client/dashboard/stats/';
+      let fallbackEndpoint = '/users/client/dashboard/stats/';
       
       if (role === 'admin') {
         fallbackEndpoint = '/users/admin/dashboard/stats/';
@@ -305,45 +301,46 @@ function Dashboard() {
           stats={globalStats}
         />
         
-        <div className="dashboard-content">
-          <Routes>
-            {/*  RUTAS PARA ADMINISTRADOR */}
-            {userRole === 'admin' && (
-              <>
-                <Route path="/" element={<AdminHome stats={globalStats} user={user} />} />
-                <Route path="/home" element={<AdminHome stats={globalStats} user={user} />} />
-                <Route path="/users" element={<AdminUsers />} />
-                <Route path="/parking" element={<AdminParking />} />
-                <Route path="/reports" element={<AdminReports />} />
-                <Route path="/finance" element={<AdminFinance />} />
+        {/*  CONTENEDOR CON SCROLL AGREGADO */}
+        <div className="dashboard-content-scroll">
+          <div className="dashboard-content">
+            <Routes>
+              {/*  RUTAS PARA ADMINISTRADOR */}
+              {userRole === 'admin' && (
+                <>
+                  <Route path="/" element={<AdminHome stats={globalStats} user={user} />} />
+                  <Route path="/home" element={<AdminHome stats={globalStats} user={user} />} />
+                  <Route path="/users" element={<AdminUsers />} />
+                  <Route path="/parking" element={<AdminParking />} />
+                  <Route path="/reports" element={<AdminReports />} />
+                  <Route path="/finance" element={<AdminFinance />} />
+                </>
+              )}
 
-              {/* <Route path="/system" element={<AdminSystem />} /> */}
-              </>
-            )}
+              {/*  RUTAS PARA PROPIETARIO */}
+              {userRole === 'owner' && (
+                <>
+                  <Route path="/" element={<OwnerHome stats={globalStats} user={user} />} />
+                  <Route path="/home" element={<OwnerHome stats={globalStats} user={user} />} />
+                  <Route path="/parking" element={<OwnerParking />} />
+                  <Route path="/reservations" element={<OwnerReservations />} />
+                  <Route path="/reports" element={<OwnerReports />} />
+                  <Route path="/profile" element={<OwnerProfile />} />
+                </>
+              )}
 
-            {/*  RUTAS PARA PROPIETARIO */}
-            {userRole === 'owner' && (
-              <>
-                <Route path="/" element={<OwnerHome stats={globalStats} user={user} />} />
-                <Route path="/home" element={<OwnerHome stats={globalStats} user={user} />} />
-                <Route path="/parking" element={<OwnerParking />} />
-                <Route path="/reservations" element={<OwnerReservations />} />
-                <Route path="/reports" element={<OwnerReports />} />
-                <Route path="/profile" element={<OwnerProfile />} />
-              </>
-            )}
-
-            {/* RUTA DE FALLBACK PARA ROLES NO RECONOCIDOS */}
-            <Route path="*" element={
-              <div className="access-denied">
-                <h2>Configuración de Rol Incorrecta</h2>
-                <p>Tu rol ({userRole}) no está configurado correctamente.</p>
-                <button onClick={handleLogout} className="logout-btn">
-                  Cerrar Sesión
-                </button>
-              </div>
-            } />
-          </Routes>
+              {/* RUTA DE FALLBACK PARA ROLES NO RECONOCIDOS */}
+              <Route path="*" element={
+                <div className="access-denied">
+                  <h2>Configuración de Rol Incorrecta</h2>
+                  <p>Tu rol ({userRole}) no está configurado correctamente.</p>
+                  <button onClick={handleLogout} className="logout-btn">
+                    Cerrar Sesión
+                  </button>
+                </div>
+              } />
+            </Routes>
+          </div>
         </div>
       </div>
     </div>

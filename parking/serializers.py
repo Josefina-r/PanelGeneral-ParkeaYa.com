@@ -137,9 +137,7 @@ class ParkingLotListSerializer(serializers.ModelSerializer):
             return ((obj.total_plazas - obj.plazas_disponibles) / obj.total_plazas) * 100
         return 0
 
-# ----------------------------
-# Parking Approval System
-# ----------------------------
+
 class ParkingApprovalRequestSerializer(serializers.ModelSerializer):
     solicitado_por_nombre = serializers.CharField(source='solicitado_por.username', read_only=True)
     revisado_por_nombre = serializers.CharField(source='revisado_por.username', read_only=True)
@@ -184,9 +182,6 @@ class ParkingApprovalDashboardSerializer(serializers.ModelSerializer):
             'dias_pendiente', 'panel_local_id'
         ]
 
-# ----------------------------
-# Dashboard Serializers
-# ----------------------------
 class AdminDashboardStatsSerializer(serializers.Serializer):
     total_parkings = serializers.IntegerField()
     active_parkings = serializers.IntegerField()

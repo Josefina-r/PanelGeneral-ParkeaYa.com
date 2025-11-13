@@ -4,7 +4,9 @@ from .views import (
     ParkingLotViewSet, 
     ParkingReviewViewSet, 
     ParkingApprovalViewSet,
+    admin_approved_parkings,
     admin_dashboard_data,
+    admin_pending_parkings,
     owner_dashboard_data,
     dashboard_data,
     dashboard_stats,
@@ -34,6 +36,14 @@ urlpatterns = [
     # Main parking endpoints
     path('', include(router.urls)),
     
+      # Nuevos endpoints para admin
+    path('admin/pending-parkings/', admin_pending_parkings, name='pending-parkings'),
+    path('admin/approved-parkings/', admin_approved_parkings, name='approved-parkings'),
+    
+    # Endpoints de acciones
+    path('parkings/<int:pk>/approve/', ParkingLotViewSet.as_view({'post': 'approve'}), name='parking-approve'),
+    path('parkings/<int:pk>/reject/', ParkingLotViewSet.as_view({'post': 'reject'}), name='parking-reject'),
+
     # Endpoints específicos para owners
     path('my-parkings/', ParkingLotViewSet.as_view({'get': 'mis_estacionamientos'}), name='my-parkings'),
 ]

@@ -49,6 +49,8 @@ urlpatterns = [
 
     path('api/', include(router.urls)),
     
+
+     path('api/', include('parking.urls')),    
     
     # JWT endpoints globales
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -64,6 +66,7 @@ urlpatterns = [
          TicketViewSet.as_view({'get': 'by_parking'}), 
          name='tickets-by-parking'),
     
+
     
     # Complaints app
     path('api/complaints/', include('complaints.urls')),

@@ -1,13 +1,20 @@
-# models.py - CORREGIDO Y COMPLETO
+# models.py - SOLO CAMBIOS SOLICITADOS
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
-from datetime import time
 from decimal import Decimal
 
 
 class ParkingLot(models.Model):
+    # Opciones para nivel de seguridad - NUEVO
+    NIVEL_SEGURIDAD_CHOICES = [
+        ('Básico', 'Básico'),
+        ('Estándar', 'Estándar'),
+        ('Premium', 'Premium'),
+        ('Alto', 'Alto'),
+    ]
+    
     dueno = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='parkings')
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
@@ -17,9 +24,18 @@ class ParkingLot(models.Model):
         validators=[RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Número de teléfono inválido.")]
     )
     descripcion = models.TextField(blank=True)
+    
+    # CAMBIO: Eliminar valores por defecto, permitir null para 24 horas
     horario_apertura = models.TimeField(null=True, blank=True)
     horario_cierre = models.TimeField(null=True, blank=True)
-    nivel_seguridad = models.CharField(max_length=50, default='Estándar')
+    
+    # CAMBIO: Agregar choices para nivel de seguridad
+    nivel_seguridad = models.CharField(
+        max_length=20, 
+        choices=NIVEL_SEGURIDAD_CHOICES, 
+        default='Estándar'
+    )
+    
     tarifa_hora = models.DecimalField(max_digits=6, decimal_places=2)
     total_plazas = models.PositiveIntegerField()
     plazas_disponibles = models.PositiveIntegerField()
@@ -28,8 +44,8 @@ class ParkingLot(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
     total_reseñas = models.PositiveIntegerField(default=0)
-    aprobado = models.BooleanField(default=False)
-    activo = models.BooleanField(default=True)
+    aprobado = models.BooleanField(default=False) 
+    activo = models.BooleanField(default=False)  
 
     class Meta:
         indexes = [
@@ -47,8 +63,9 @@ class ParkingLot(models.Model):
         super().save(*args, **kwargs)
 
     def esta_abierto(self):
+        """Verifica si el estacionamiento está abierto según su horario configurado"""
         if not self.horario_apertura or not self.horario_cierre:
-            return True
+            return True  # 24 horas
         ahora = timezone.localtime().time()
         if self.horario_apertura < self.horario_cierre:
             return self.horario_apertura <= ahora <= self.horario_cierre
@@ -56,13 +73,8 @@ class ParkingLot(models.Model):
             return ahora >= self.horario_apertura or ahora <= self.horario_cierre
 
     def calcular_costo_reserva(self, tipo_reserva, duracion_minutos, tipo_vehiculo):
-        """
-        Calcular costo de reserva - método placeholder
-        TODO: Implementar lógica real con multiplicadores
-        """
         precio_base_por_minuto = float(self.tarifa_hora) / 60.0
 
-        # Multiplicadores básicos por tipo de vehículo
         multiplicadores = {
             'auto': 1.0,
             'moto': 0.7,
@@ -71,7 +83,6 @@ class ParkingLot(models.Model):
 
         multiplicador = multiplicadores.get(tipo_vehiculo, 1.0)
 
-        # Cálculo básico según tipo de reserva
         if tipo_reserva == 'hora':
             costo = precio_base_por_minuto * duracion_minutos * multiplicador
         elif tipo_reserva == 'dia':
@@ -85,6 +96,7 @@ class ParkingLot(models.Model):
 
 
 class ParkingImage(models.Model):
+    # DEJAR EXACTAMENTE IGUAL - NO CAMBIAR NADA
     estacionamiento = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='imagenes')
     imagen = models.ImageField(upload_to='parking_images/')
     descripcion = models.CharField(max_length=100, blank=True)
@@ -95,6 +107,7 @@ class ParkingImage(models.Model):
 
 
 class ParkingReview(models.Model):
+    # DEJAR EXACTAMENTE IGUAL - NO CAMBIAR NADA
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     estacionamiento = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name='reseñas')
     comentario = models.TextField(blank=True)
@@ -131,9 +144,18 @@ class ParkingApprovalRequest(models.Model):
         blank=True
     )
     descripcion = models.TextField(blank=True)
-    horario_apertura = models.TimeField(default=time(8, 0))
-    horario_cierre = models.TimeField(default=time(22, 0))
-    nivel_seguridad = models.CharField(max_length=50, default='Estándar')
+    
+    # CAMBIO: Eliminar valores por defecto aquí también
+    horario_apertura = models.TimeField(null=True, blank=True)
+    horario_cierre = models.TimeField(null=True, blank=True)
+    
+    # CAMBIO: Usar las mismas choices
+    nivel_seguridad = models.CharField(
+        max_length=20, 
+        choices=ParkingLot.NIVEL_SEGURIDAD_CHOICES, 
+        default='Estándar'
+    )
+    
     tarifa_hora = models.DecimalField(max_digits=6, decimal_places=2)
     total_plazas = models.PositiveIntegerField()
     plazas_disponibles = models.PositiveIntegerField()
@@ -186,18 +208,13 @@ class ParkingApprovalRequest(models.Model):
         return f"Solicitud: {self.nombre} - {self.get_status_display()}"
 
     def save(self, *args, **kwargs):
-        # Si se aprueba y no tiene estacionamiento creado, crearlo
         if self.status == 'APPROVED' and not self.estacionamiento_creado:
             self.crear_estacionamiento()
-
-        # Si se rechaza o aprueba, registrar fecha de revisión
         if self.status in ['APPROVED', 'REJECTED'] and not self.fecha_revision:
             self.fecha_revision = timezone.now()
-
         super().save(*args, **kwargs)
 
     def crear_estacionamiento(self):
-        """Crea un ParkingLot a partir de la solicitud aprobada"""
         try:
             parking = ParkingLot.objects.create(
                 dueno=self.solicitado_por,
@@ -223,14 +240,12 @@ class ParkingApprovalRequest(models.Model):
             return None
 
     def aprobar(self, usuario_revisor):
-        """Aprueba la solicitud"""
         self.status = 'APPROVED'
         self.revisado_por = usuario_revisor
         self.fecha_revision = timezone.now()
         self.save()
 
     def rechazar(self, usuario_revisor, motivo=""):
-        """Rechaza la solicitud"""
         self.status = 'REJECTED'
         self.revisado_por = usuario_revisor
         self.motivo_rechazo = motivo
@@ -239,7 +254,6 @@ class ParkingApprovalRequest(models.Model):
 
     @property
     def dias_pendiente(self):
-        """Días que ha estado pendiente la solicitud"""
         if self.status == 'PENDING':
             return (timezone.now() - self.fecha_solicitud).days
         return 0

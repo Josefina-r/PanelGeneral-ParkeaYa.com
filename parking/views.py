@@ -30,9 +30,6 @@ from payments.models import Payment
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
-# =============================================================================
-# VISTAS DEL DASHBOARD
-# =============================================================================
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
@@ -49,6 +46,7 @@ def dashboard_data(request):
             'error': 'Rol no autorizado para ver el dashboard'
         }, status=status.HTTP_403_FORBIDDEN)
 
+
 @api_view(['GET'])
 @permission_classes([IsAdminGeneral])
 def admin_dashboard_data(request):
@@ -59,7 +57,7 @@ def admin_dashboard_data(request):
         total_reservations = Reservation.objects.count()
         
         # Estadísticas de aprobación
-        pending_approvals = ParkingApprovalRequest.objects.filter(estado='pendiente').count()
+        pending_approvals = ParkingApprovalRequest.objects.filter(status='PENDING').count()
         
         # Ingresos totales
         total_income = Payment.objects.aggregate(total=Sum('monto'))['total'] or 0
@@ -79,6 +77,7 @@ def admin_dashboard_data(request):
             'error': 'Error al obtener datos del dashboard'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 @api_view(['GET'])
 @permission_classes([IsOwner])
 def owner_dashboard_data(request):
@@ -88,11 +87,11 @@ def owner_dashboard_data(request):
         total_parkings = user_parkings.count()
         
         # Reservaciones en los estacionamientos del dueño
-        total_reservations = Reservation.objects.filter(parking__in=user_parkings).count()
+        total_reservations = Reservation.objects.filter(estacionamiento__in=user_parkings).count()
         
         # Ingresos del dueño
         total_income = Payment.objects.filter(
-            reservation__parking__in=user_parkings
+            reserva__estacionamiento__in=user_parkings
         ).aggregate(total=Sum('monto'))['total'] or 0
         
         return Response({
@@ -107,6 +106,7 @@ def owner_dashboard_data(request):
         return Response({
             'error': 'Error al obtener datos del dashboard'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
@@ -126,13 +126,88 @@ def dashboard_stats(request):
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+# NUEVOS ENDPOINTS PARA ADMIN PARKING MANAGEMENT
+@api_view(['GET'])
+@permission_classes([IsAdminGeneral])
+def admin_pending_parkings(request):
+    """Obtener parkings pendientes de aprobación"""
+    try:
+        # Parkings que NO están aprobados
+        pending_parkings = ParkingLot.objects.filter(aprobado=False)
+        
+        pending_data = []
+        for parking in pending_parkings:
+            pending_data.append({
+                'id': parking.id,
+                'nombre': parking.nombre,
+                'direccion': parking.direccion,
+                'telefono': parking.telefono,
+                'descripcion': parking.descripcion,
+                'tarifa_hora': float(parking.tarifa_hora),
+                'total_plazas': parking.total_plazas,
+                'plazas_disponibles': parking.plazas_disponibles,
+                'horario_apertura': parking.horario_apertura,
+                'horario_cierre': parking.horario_cierre,
+                'nivel_seguridad': parking.nivel_seguridad,
+                'propietario': {
+                    'id': parking.dueno.id,
+                    'username': parking.dueno.username,
+                    'email': parking.dueno.email,
+                    'first_name': parking.dueno.first_name,
+                    'last_name': parking.dueno.last_name,
+                },
+                'status': 'pending',
+                'is_approval_request': True,
+                'aprobado': parking.aprobado,
+                'activo': parking.activo
+            })
+        
+        return Response(pending_data)
+    except Exception as e:
+        logger.error(f"Error en admin_pending_parkings: {str(e)}")
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminGeneral])
+def admin_approved_parkings(request):
+    """Obtener parkings aprobados"""
+    try:
+        approved_parkings = ParkingLot.objects.filter(aprobado=True)
+        
+        approved_data = []
+        for parking in approved_parkings:
+            approved_data.append({
+                'id': parking.id,
+                'nombre': parking.nombre,
+                'direccion': parking.direccion,
+                'tarifa_hora': float(parking.tarifa_hora),
+                'total_plazas': parking.total_plazas,
+                'plazas_disponibles': parking.plazas_disponibles,
+                'propietario': {
+                    'username': parking.dueno.username,
+                    'email': parking.dueno.email,
+                },
+                'status': 'active' if parking.activo else 'suspended',
+                'is_approval_request': False,
+                'aprobado': parking.aprobado,
+                'activo': parking.activo
+            })
+        
+        return Response(approved_data)
+    except Exception as e:
+        logger.error(f"Error en admin_approved_parkings: {str(e)}")
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class ParkingLotViewSet(viewsets.ModelViewSet):
     """Vista base para estacionamientos - Se especializa por rol"""
     queryset = ParkingLot.objects.all().select_related('dueno').prefetch_related('imagenes', 'reseñas')
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['nombre', 'direccion', 'nivel_seguridad']
     ordering_fields = ['tarifa_hora', 'rating_promedio', 'fecha_creacion']
-    
+    permission_classes = [permissions.AllowAny]
+
     def get_serializer_class(self):
         """Selecciona serializer según el rol del usuario"""
         user = self.request.user
@@ -148,7 +223,7 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
             return ParkingLotClientSerializer
 
     def get_queryset(self):
-        """Filtra los estacionamientos según el rol"""
+        """Filtra los estacionamientos según el rol - CORREGIDO"""
         user = self.request.user
         qs = super().get_queryset()
         
@@ -178,26 +253,22 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
             # Usuario no autenticado solo ve estacionamientos públicos
             return qs.filter(aprobado=True, activo=True)
 
-    def get_permissions(self):
-        """Configura permisos según la acción"""
-        if self.action in ['list', 'retrieve']:
-            permission_classes = [permissions.AllowAny]
-        elif self.action in ['create']:
-            permission_classes = [permissions.IsAuthenticated, IsAdminOrOwner]
-        elif self.action in ['update', 'partial_update', 'destroy']:
-            permission_classes = [permissions.IsAuthenticated, IsAdminOrOwnerOfParking]
-        else:
-            permission_classes = [permissions.IsAuthenticated]
-        
-        return [permission() for permission in permission_classes]
-
     def perform_create(self, serializer):
-        """Asigna el dueño al crear estacionamiento"""
+        """Asigna el dueño al crear estacionamiento - CORREGIDO"""
+        # Crear parking como NO aprobado por defecto
+        parking = serializer.save(
+            dueno=self.request.user,
+            aprobado=False,  # ← NO aprobado por defecto
+            activo=False     # ← NO activo hasta ser aprobado
+        )
+
+        # Crear solicitud de aprobación automáticamente
         if self.request.user.is_owner:
-            serializer.save(dueno=self.request.user)
-        else:
-            # Admin puede crear estacionamientos para otros dueños
-            serializer.save()
+            ParkingApprovalRequest.objects.create(
+                solicitado_por=self.request.user,
+                estacionamiento_creado=parking,
+                status='PENDING'
+            )
 
     @action(detail=False, methods=['get'])
     def mis_estacionamientos(self, request):
@@ -210,6 +281,24 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
         
         parkings = self.get_queryset().filter(dueno=request.user)
         serializer = self.get_serializer(parkings, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def mapa(self, request):
+        """Estacionamientos disponibles para mapa interactivo - devuelve array sin paginar"""
+        # Solo estacionamientos aprobados y activos
+        parkings = self.get_queryset().filter(aprobado=True, activo=True)
+        
+        # Opcional: filtro por disponibilidad
+        if request.query_params.get('disponibles') == 'true':
+            parkings = parkings.filter(plazas_disponibles__gt=0)
+        
+        # Opcional: ordenar por rating
+        if request.query_params.get('ordenar') == 'rating':
+            parkings = parkings.order_by('-rating_promedio')
+        
+        serializer = self.get_serializer(parkings, many=True)
+        # IMPORTANTE: Retorna directamente el array, sin paginación
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
@@ -243,11 +332,51 @@ class ParkingLotViewSet(viewsets.ModelViewSet):
         
         parking = self.get_object()
         parking.aprobado = True
+        parking.activo = True  # Activar al aprobar
         parking.save()
+        
+        # Actualizar la solicitud de aprobación si existe
+        try:
+            approval_request = ParkingApprovalRequest.objects.get(estacionamiento_creado=parking)
+            approval_request.status = 'APPROVED'
+            approval_request.revisado_por = request.user
+            approval_request.fecha_revision = timezone.now()
+            approval_request.save()
+        except ParkingApprovalRequest.DoesNotExist:
+            pass  # No hay solicitud asociada
         
         return Response({
             'message': 'Estacionamiento aprobado exitosamente',
             'aprobado': parking.aprobado
+        })
+
+    @action(detail=True, methods=['post'])
+    def reject(self, request, pk=None):
+        """Rechazar estacionamiento (solo admin)"""
+        if not request.user.is_admin_general:
+            return Response(
+                {'error': 'Solo administradores pueden rechazar estacionamientos'}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        parking = self.get_object()
+        
+        # Actualizar la solicitud de aprobación si existe
+        try:
+            approval_request = ParkingApprovalRequest.objects.get(estacionamiento_creado=parking)
+            approval_request.status = 'REJECTED'
+            approval_request.revisado_por = request.user
+            approval_request.fecha_revision = timezone.now()
+            approval_request.motivo_rechazo = request.data.get('motivo', '')
+            approval_request.save()
+        except ParkingApprovalRequest.DoesNotExist:
+            pass  # No hay solicitud asociada
+        
+        # Eliminar el parking rechazado
+        parking.delete()
+        
+        return Response({
+            'message': 'Estacionamiento rechazado y eliminado exitosamente'
         })
 
 
@@ -270,6 +399,7 @@ class ParkingReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
+
 
 class ParkingApprovalViewSet(viewsets.ModelViewSet):
     serializer_class = ParkingApprovalRequestSerializer
@@ -381,7 +511,7 @@ class ParkingApprovalViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated, IsAdminGeneral])
-def admin_dashboard_data(request):
+def admin_dashboard_complete(request):
     """Dashboard completo para administradores generales"""
     try:
         # Estadísticas básicas
@@ -482,15 +612,16 @@ def admin_dashboard_data(request):
         return Response(data)
         
     except Exception as e:
-        logger.error(f"Error en admin_dashboard_data: {str(e)}")
+        logger.error(f"Error en admin_dashboard_complete: {str(e)}")
         return Response(
             {'error': f'Error al cargar datos del dashboard: {str(e)}'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated, IsOwner])
-def owner_dashboard_data(request):
+def owner_dashboard_complete(request):
     """Dashboard completo para dueños de estacionamientos"""
     try:
         user = request.user
@@ -557,7 +688,7 @@ def owner_dashboard_data(request):
             
             daily_occupancy.append({
                 'fecha': day.strftime('%Y-%m-%d'),
-                'ocupacion': min(reservations_count, total_spaces)  # No puede exceder el total
+                'ocupacion': min(reservations_count, total_spaces)
             })
         
         data = {
@@ -599,50 +730,12 @@ def owner_dashboard_data(request):
         return Response(data)
         
     except Exception as e:
-        logger.error(f"Error en owner_dashboard_data: {str(e)}")
+        logger.error(f"Error en owner_dashboard_complete: {str(e)}")
         return Response(
             {'error': f'Error al cargar datos del dashboard: {str(e)}'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
-@api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
-def dashboard_data(request):
-    """Dashboard automático según el rol del usuario"""
-    user = request.user
-    
-    if user.is_admin_general:
-        return admin_dashboard_data(request)
-    elif user.is_owner:
-        return owner_dashboard_data(request)
-    else:
-        # Dashboard para clientes (si es necesario)
-        return Response({
-            'user': {
-                'name': user.get_full_name() or user.username,
-                'role': 'Cliente',
-                'email': user.email
-            },
-            'message': 'Bienvenido al sistema ParkeYa',
-            'stats': {
-                'reservas_activas': Reservation.objects.filter(
-                    usuario=user, 
-                    estado__in=['activa','confirmada']
-                ).count()
-            }
-        })
-    
-
-@api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
-def dashboard_stats(request):
-
-    if request.user.is_admin_general:
-        return admin_dashboard_data(request)
-    elif request.user.is_owner:
-        return owner_dashboard_data(request)
-    else:
-        return Response({'message': 'No tienes permisos para ver el dashboard'})
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])

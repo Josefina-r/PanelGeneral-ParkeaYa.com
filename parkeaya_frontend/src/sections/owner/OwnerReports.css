@@ -1,0 +1,1048 @@
+/* OwnerReports.css - ESTILOS PARA REPORTES Y ANALYTICS DEL OWNER */
+.owner-reports {
+  padding: 0;
+  animation: slideIn 0.5s ease-out;
+}
+
+/* HEADER */
+.owner-reports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.owner-reports-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--owner-primary) 0%, var(--owner-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.owner-reports-header p {
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.time-filter {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 160px;
+}
+
+.time-filter:focus {
+  outline: none;
+  border-color: var(--owner-primary);
+  box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--owner-gradient);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.refresh-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
+}
+
+/* TIPOS DE REPORTE */
+.report-types {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+}
+
+.type-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.type-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.type-btn.active {
+  background: var(--owner-gradient);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+  transform: translateY(-2px);
+}
+
+/* PERIODO INFO */
+.period-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--owner-gradient);
+  border-radius: 12px;
+  color: white;
+}
+
+.period-info h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.last-update {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+}
+
+/* GRID DE MÉTRICAS */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.metric-card.large {
+  grid-column: span 2;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+}
+
+.metric-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  background: var(--owner-gradient);
+}
+
+.metric-content {
+  flex: 1;
+}
+
+.metric-content h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.metric-content p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.metric-trend {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.metric-trend.positive {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.metric-trend.negative {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.metric-info {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* BARRA DE OCUPACIÓN */
+.occupancy-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--dark-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.occupancy-fill {
+  height: 100%;
+  background: var(--owner-gradient);
+  border-radius: 4px;
+  transition: width 1s ease-in-out;
+}
+
+/* GRID DE INSIGHTS */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.insight-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.insight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.insight-card h4 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.insight-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.insight-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.time, .day {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.popularity, .rank {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+/* SECCIÓN DE TENDENCIAS */
+.trend-section {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.trend-section h4 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.trend-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  height: 200px;
+  margin-bottom: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.trend-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  max-width: 40px;
+}
+
+.trend-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 100%;
+  width: 100%;
+}
+
+.earnings-bar {
+  background: linear-gradient(to top, #3b82f6, #60a5fa);
+  border-radius: 4px 4px 0 0;
+  flex: 1;
+  transition: all 0.3s ease;
+  min-height: 4px;
+  cursor: pointer;
+}
+
+.earnings-bar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.reservations-bar {
+  background: linear-gradient(to top, #10b981, #34d399);
+  border-radius: 4px 4px 0 0;
+  flex: 1;
+  transition: all 0.3s ease;
+  min-height: 4px;
+  cursor: pointer;
+}
+
+.reservations-bar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.month-label, .date-label {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.legend-color {
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.legend-color.earnings {
+  background: #3b82f6;
+}
+
+.legend-color.reservations {
+  background: #10b981;
+}
+
+/* REPORTE DE INGRESOS */
+.revenue-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.revenue-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.revenue-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.revenue-card:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+.revenue-card:nth-child(2)::before { background: linear-gradient(90deg, #dc2626, #b91c1c); }
+.revenue-card:nth-child(3)::before { background: linear-gradient(90deg, #059669, #047857); }
+
+.revenue-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+}
+
+.revenue-card h4 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.revenue-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.revenue-amount.commission {
+  color: #dc2626;
+}
+
+.revenue-amount.net {
+  color: #059669;
+}
+
+.revenue-period {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.revenue-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.detail-section {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.detail-section:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.detail-section h4 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+/* DESGLOSE DIARIO */
+.daily-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.daily-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border-left: 4px solid #3b82f6;
+}
+
+.daily-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.date {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 60px;
+  font-size: 0.9rem;
+}
+
+.day-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.earnings {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.reservations {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.day-bar {
+  width: 80px;
+  height: 6px;
+  background: var(--dark-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--owner-gradient);
+  border-radius: 3px;
+  transition: width 1s ease-in-out;
+}
+
+/* MÉTODOS DE PAGO */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payment-method {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.payment-method:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.method-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.method-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: capitalize;
+  font-size: 1rem;
+}
+
+.method-percentage {
+  font-weight: 700;
+  color: #3b82f6;
+  font-size: 1.1rem;
+}
+
+.method-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--dark-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.method-fill {
+  height: 100%;
+  background: var(--owner-gradient);
+  border-radius: 4px;
+  transition: width 1s ease-in-out;
+}
+
+.method-amount {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-align: right;
+  font-weight: 600;
+}
+
+/* REPORTE DE RESERVAS */
+.reservations-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.stat-card:nth-child(1)::before { background: #3b82f6; }
+.stat-card:nth-child(2)::before { background: #059669; }
+.stat-card:nth-child(3)::before { background: #dc2626; }
+.stat-card:nth-child(4)::before { background: #f59e0b; }
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+}
+
+.stat-card h4 {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value:not(.completed):not(.cancelled):not(.no-show):not(.rating):not(.active):not(.repeat):not(.new):not(.retention) {
+  color: var(--text-primary);
+}
+
+.stat-value.completed {
+  color: #059669;
+}
+
+.stat-value.cancelled {
+  color: #dc2626;
+}
+
+.stat-value.no-show {
+  color: #f59e0b;
+}
+
+.stat-value.rating {
+  color: #f59e0b;
+}
+
+.stat-value.active {
+  color: #3b82f6;
+}
+
+.stat-value.repeat, .stat-value.new, .stat-value.retention {
+  color: #8b5cf6;
+}
+
+/* SECCIÓN DE PERFORMANCE */
+.performance-section {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.performance-section h4 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.performance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.performance-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--dark-border);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.performance-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.parking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.parking-header h5 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.earnings-badge {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+}
+
+.parking-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat .label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.stat .value {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.performance-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--dark-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.performance-fill {
+  height: 100%;
+  background: var(--owner-gradient);
+  border-radius: 3px;
+  transition: width 1s ease-in-out;
+}
+
+/* ESTADOS DE CARGA Y ERROR */
+.owner-reports-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.owner-reports-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--owner-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.owner-reports-loading p {
+  color: var(--text-secondary);
+}
+
+.owner-reports-error {
+  text-align: center;
+  padding: 3rem;
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  color: var(--error);
+}
+
+.owner-reports-error .error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.owner-reports-error h3 {
+  color: var(--error);
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.owner-reports-error p {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-secondary);
+}
+
+.retry-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--error);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* MENSAJES DE ERROR */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  color: var(--error);
+  margin-bottom: 1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .metric-card.large {
+    grid-column: span 1;
+  }
+  
+  .revenue-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .owner-reports-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .time-filter, .refresh-btn {
+    flex: 1;
+  }
+  
+  .report-types {
+    flex-direction: column;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .revenue-summary, .reservations-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .period-info {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .revenue-summary, .reservations-summary {
+    grid-template-columns: 1fr;
+  }
+  
+  .trend-chart {
+    gap: 0.25rem;
+  }
+  
+  .month-label, .date-label {
+    font-size: 0.7rem;
+  }
+  
+  .daily-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .day-bar {
+    width: 100%;
+  }
+}
+
+/* ANIMACIONES */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* EFECTOS ESPECIALES */
+.metric-card:hover .metric-icon {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.type-btn.active .icon-wrapper {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.performance-card:hover .earnings-badge {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+/* GRADIENTES ANIMADOS */
+.metric-card:hover {
+  border-color: var(--owner-primary);
+  box-shadow: 0 8px 30px rgba(0, 184, 148, 0.2);
+}
+
+.revenue-card:hover {
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.2);
+}
+
+.detail-section:hover {
+  border-color: var(--owner-primary);
+  box-shadow: 0 8px 30px rgba(0, 184, 148, 0.2);
+}
+
+/* VARIABLES CSS (deben estar definidas en tu archivo principal) */
+:root {
+  --owner-primary: #00b894;
+  --owner-secondary: #00a085;
+  --owner-gradient: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+  --dark-bg: #1a1a1a;
+  --dark-card: #2d2d2d;
+  --dark-border: #404040;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+  --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-hard: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --success: #10b981;
+  --error: #ef4444;
+  --info: #3b82f6;
+}

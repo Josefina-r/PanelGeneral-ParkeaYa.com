@@ -1,0 +1,258 @@
+{
+  "info": {
+    "name": "Parkeaya - Cliente API",
+    "description": "Endpoints de autenticación para cliente móvil",
+    "version": "1.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. REGISTRO DE CLIENTE",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"testuser_{{$timestamp}}\",\n  \"email\": \"test_{{$timestamp}}@example.com\",\n  \"password\": \"TestPass123!\",\n  \"password_confirm\": \"TestPass123!\",\n  \"telefono\": \"+57 3001234567\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/users/auth/register/client/",
+          "host": ["{{base_url}}"],
+          "path": ["users", "auth", "register", "client", ""]
+        }
+      }
+    },
+    {
+      "name": "2. LOGIN",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.environment.set('access_token', jsonData.access);",
+              "    pm.environment.set('refresh_token', jsonData.refresh);",
+              "    pm.environment.set('user_id', jsonData.user.id);",
+              "    console.log('✅ Tokens guardados en variables');",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"juanperez\",\n  \"password\": \"TestPass123!\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/users/auth/login/",
+          "host": ["{{base_url}}"],
+          "path": ["users", "auth", "login", ""]
+        }
+      }
+    },
+    {
+      "name": "3. REFRESCAR TOKEN",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    pm.environment.set('access_token', jsonData.access);",
+              "    console.log('✅ Nuevo access_token obtenido');",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/users/auth/token/refresh/",
+          "host": ["{{base_url}}"],
+          "path": ["users", "auth", "token", "refresh", ""]
+        }
+      }
+    },
+    {
+      "name": "4. OBTENER PERFIL",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/users/profile/",
+          "host": ["{{base_url}}"],
+          "path": ["users", "profile", ""]
+        }
+      }
+    },
+    {
+      "name": "5. ESTADÍSTICAS DEL CLIENTE",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/users/client/dashboard/stats/",
+          "host": ["{{base_url}}"],
+          "path": ["users", "client", "dashboard", "stats", ""]
+        }
+      }
+    },
+    {
+      "name": "6. LISTAR VEHÍCULOS",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cars/",
+          "host": ["{{base_url}}"],
+          "path": ["cars", ""]
+        }
+      }
+    },
+    {
+      "name": "7. CREAR VEHÍCULO",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"placa\": \"ABC-123\",\n  \"modelo\": \"Toyota Corolla\",\n  \"tipo\": \"auto\",\n  \"color\": \"Blanco\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/cars/",
+          "host": ["{{base_url}}"],
+          "path": ["cars", ""]
+        }
+      }
+    },
+    {
+      "name": "8. ACTUALIZAR VEHÍCULO",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"modelo\": \"Toyota Corolla 2023\",\n  \"color\": \"Gris\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/cars/1/",
+          "host": ["{{base_url}}"],
+          "path": ["cars", "1", ""]
+        }
+      }
+    },
+    {
+      "name": "9. ELIMINAR VEHÍCULO",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cars/1/",
+          "host": ["{{base_url}}"],
+          "path": ["cars", "1", ""]
+        }
+      }
+    }
+  ]
+}

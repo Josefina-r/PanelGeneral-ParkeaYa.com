@@ -37,4 +37,6 @@ urlpatterns = [
     
     # Incluir las rutas del router
     path('', include(router.urls)),
+    # En users/urls.py, agrega esta línea:
+    path('owner/me/', OwnerUserViewSet.as_view({'get': 'me', 'put': 'me'}), name='owner-me'),
 ]

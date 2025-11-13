@@ -20,10 +20,6 @@ from django.db.models import Q
 
 User = get_user_model()
 
-# =============================================================================
-# VISTAS DE AUTENTICACIÓN
-# =============================================================================
-
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -39,9 +35,6 @@ class RegisterOwnerView(generics.CreateAPIView):
     serializer_class = OwnerRegistrationSerializer
     permission_classes = [permissions.AllowAny]
 
-# =============================================================================
-# VISTAS DE USUARIOS POR ROL
-# =============================================================================
 
 class UserViewSet(viewsets.ModelViewSet):
     """Vista general para usuarios - Acceso limitado según rol"""
@@ -63,6 +56,18 @@ class OwnerUserViewSet(UserViewSet):
 
     def get_queryset(self):
         return User.objects.filter(Q(id=self.request.user.id) | Q(rol='cliente'))
+    @action(detail=False, methods=['get', 'put'])
+    def me(self, request):
+        """Endpoint para obtener y actualizar el perfil del owner actual"""
+        if request.method == 'GET':
+            serializer = self.get_serializer(request.user)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = self.get_serializer(request.user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ClientUserViewSet(UserViewSet):
     """Vista para clientes - Solo acceso a su propio perfil"""
@@ -154,9 +159,6 @@ class ClientUserViewSet(UserViewSet):
         
         return Response({'message': 'Usuario eliminado correctamente'})
 
-# =============================================================================
-# VISTA DE VEHÍCULOS CON PERMISOS POR ROL
-# =============================================================================
 
 class CarViewSet(viewsets.ModelViewSet):
     queryset = Car.objects.all().order_by('-created_at')

@@ -436,14 +436,7 @@ const AdminFinance = ({ userRole }) => {
           </div>
         </div>
       </div>
-
-      {/* 🔍 DEBUG INFO */}
-      {error && (
-        <div className="error-message">
-          <i className="fas fa-exclamation-triangle"></i>
-          {error}
-        </div>
-      )}
+      
     </div>
   );
 };
