@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\kathe\OneDrive\Documentos\ParkeaYa\Paneladmin-Parkeaya-1\venv
+set VIRTUAL_ENV=D:\ParkeayaPanel\PanelGeneral-ParkeaYa.com\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

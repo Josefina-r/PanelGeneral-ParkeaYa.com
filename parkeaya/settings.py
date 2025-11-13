@@ -63,7 +63,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
@@ -109,10 +109,10 @@ WSGI_APPLICATION = 'parkeaya.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'parkeaya_db',
+       'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'parkeya_db',
         'USER': 'postgres',
-        'PASSWORD':'1234',
+        'PASSWORD': 'katherin859!',
         'HOST': 'localhost',
         'PORT': '5432',
     }

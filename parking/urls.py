@@ -38,7 +38,7 @@ urlpatterns = [
     # Main parking endpoints
     path('', include(router.urls)),
     
-      # Nuevos endpoints para admin
+    # Nuevos endpoints para admin
     path('admin/pending-parkings/', admin_pending_parkings, name='pending-parkings'),
     path('admin/approved-parkings/', admin_approved_parkings, name='approved-parkings'),
     
@@ -48,4 +48,10 @@ urlpatterns = [
 
     # Endpoints específicos para owners
     path('my-parkings/', ParkingLotViewSet.as_view({'get': 'mis_estacionamientos'}), name='my-parkings'),
+
+    # ✅ CORREGIDO: Eliminar esta línea duplicada o usar importación directa
+    # path('api/parkings/', views.ParkingLotViewSet.as_view({'get': 'list'}), name='parkings-list'),
+    
+    # ✅ O si quieres mantenerla, usa la importación directa:
+    path('api/parkings/', ParkingLotViewSet.as_view({'get': 'list'}), name='parkings-list'),
 ]
