@@ -2,22 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import './Dashboard.css';
-
-/* Disable exhaustive-deps warnings in this file for now -
-  loadDashboardData and related helpers rely on several helpers
-  and state; we intentionally keep the initial effect deps minimal.
-  If you want stricter hook checks later, we can refactor into
-  useCallback/useMemo for the helper functions. */
-/* eslint-disable react-hooks/exhaustive-deps */
-
+import './Dashboard.css'
 //  IMPORTACIONES POR ROL - ADMIN
 import AdminHome from '../../sections/admin/AdminHome';
 import AdminUsers from '../../sections/admin/AdminUsers';
 import AdminParking from '../../sections/admin/AdminParking';
 import AdminReports from '../../sections/admin/AdminReports';
 import AdminFinance from '../../sections/admin/AdminFinance';
-/*import AdminSystem from '../../sections/admin/AdminSystem';*/
+import AdminSystem from '../../sections/admin/AdminSystem';
 import AccessDenied from '../AccessDenied';  
 
 //  IMPORTACIONES POR ROL - OWNER
@@ -26,6 +18,8 @@ import OwnerParking from '../../sections/owner/OwnerParking';
 import OwnerReservations from '../../sections/owner/OwnerReservations';
 import OwnerReports from '../../sections/owner/OwnerReports';
 import OwnerProfile from '../../sections/owner/OwnerProfile';
+// AISupportPanel (componente local de soporte IA)
+import AISupportPanel from '../../components/AISupportPanel/AISupportPanel';
 
 function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -34,6 +28,7 @@ function Dashboard() {
   const [globalStats, setGlobalStats] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showSupport, setShowSupport] = useState(false); // Estado para mostrar modal de IA
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -67,23 +62,23 @@ function Dashboard() {
     return {
       admin: {
         home: true,
-        users: true,           // Gestión de usuarios
-        parking: true,         // Gestión global estacionamientos
-        reports: true,         // Reportes y analytics
-        finance: true,         // Gestión financiera
-        system: true,          // Configuración del sistema
-        reservations: false,   // Owner-specific
-        ownerProfile: false    // Owner-specific
+        users: true,           
+        parking: true,         
+        reports: true,         
+        finance: true,         
+        system: true,          
+        reservations: false,  
+        ownerProfile: false    
       },
       owner: {
         home: true,
-        users: false,          // Solo admin
-        parking: true,         // Gestión de MI estacionamiento
-        reports: true,         // Reportes locales
-        finance: false,        // Solo admin
-        system: false,         // Solo admin
-        reservations: true,    // Gestión de reservas
-        ownerProfile: true     // Perfil de negocio
+        users: false,          
+        parking: true,         
+        reports: true,         
+        finance: false,        
+        system: false,        
+        reservations: true,    
+        ownerProfile: true     
       }
     };
   };
@@ -289,6 +284,7 @@ function Dashboard() {
         userRole={userRole}
         userData={user}
         canAccessSection={canAccessSection}
+        onSupportClick={() => setShowSupport(true)}
       />
       
       <div className={`dashboard-main ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
@@ -314,6 +310,7 @@ function Dashboard() {
                   <Route path="/parking" element={<AdminParking />} />
                   <Route path="/reports" element={<AdminReports />} />
                   <Route path="/finance" element={<AdminFinance />} />
+                  <Route path="/system" element={<AdminSystem />} />
                 </>
               )}
 
@@ -326,6 +323,8 @@ function Dashboard() {
                   <Route path="/reservations" element={<OwnerReservations />} />
                   <Route path="/reports" element={<OwnerReports />} />
                   <Route path="/profile" element={<OwnerProfile />} />
+                  <Route path="/support" element={<AISupportPanel onClose={() => setShowSupport(false)} />} />
+                  
                 </>
               )}
 
@@ -343,6 +342,27 @@ function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* BOTÓN FLOTANTE DE SOPORTE IA (solo OWNER) */}
+      {userRole === 'owner' && (
+        <button 
+          className="support-floating-btn"
+          onClick={() => setShowSupport(true)}
+          title="Soporte IA"
+        >
+          <span className="support-icon">🤖</span>
+          <span className="support-text">Soporte IA</span>
+        </button>
+      )}
+
+      {/* MODAL DE SOPORTE IA */}
+      {showSupport && (
+        <div className="support-modal">
+          <div className="support-modal-content">
+            <AISupportPanel onClose={() => setShowSupport(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ from .views import (
     admin_dashboard_data,
     admin_pending_parkings,
     owner_dashboard_data,
+    owner_dashboard_complete,
     dashboard_data,
     dashboard_stats,
     recent_reservations
@@ -27,6 +28,7 @@ urlpatterns = [
     path('dashboard/', dashboard_data, name='dashboard_data'),
     path('dashboard/admin/', admin_dashboard_data, name='admin_dashboard_data'),
     path('dashboard/owner/', owner_dashboard_data, name='owner_dashboard_data'),
+    path('dashboard/owner/complete/', owner_dashboard_complete, name='owner_dashboard_complete'),
     path('dashboard/stats/', dashboard_stats, name='dashboard_stats'),
     path('dashboard/recent-reservations/', recent_reservations, name='recent_reservations'),
     

@@ -513,3 +513,115 @@ button:active {
 .dashboard-notification.info {
   background: var(--info);
 }
+
+/* ===== ESTILOS PARA SOPORTE IA ===== */
+
+/* Botón flotante de soporte */
+.support-floating-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--owner-primary), #00d4aa);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+  z-index: 999;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.support-floating-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 184, 148, 0.6);
+}
+
+.support-icon {
+  font-size: 1.2rem;
+}
+
+.support-text {
+  white-space: nowrap;
+}
+
+/* Modal de soporte */
+.support-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(5px);
+  }
+}
+
+.support-modal-content {
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .support-floating-btn {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1.25rem;
+  }
+  
+  .support-text {
+    display: none;
+  }
+  
+  .support-icon {
+    font-size: 1.5rem;
+  }
+  
+  .support-modal-content {
+    width: 95%;
+    max-width: none;
+    height: 90vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-floating-btn {
+    bottom: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem;
+  }
+}

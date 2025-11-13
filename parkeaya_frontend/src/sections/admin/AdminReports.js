@@ -29,7 +29,7 @@ const AdminReports = ({ userRole }) => {
       setLoading(true);
       setError(null);
       
-      console.log('📊 Cargando datos de analytics...');
+      console.log(' Cargando datos de analytics...');
       
       // Cargar datos principales del dashboard admin
       const analyticsResponse = await fetch(`${API_BASE}/analytics/admin/dashboard/`, {
@@ -37,14 +37,14 @@ const AdminReports = ({ userRole }) => {
         headers: getAuthHeaders()
       });
 
-      console.log('📈 Response status analytics:', analyticsResponse.status);
+      console.log(' Response status analytics:', analyticsResponse.status);
 
       if (!analyticsResponse.ok) {
         throw new Error(`Error ${analyticsResponse.status} al cargar estadísticas`);
       }
 
       const data = await analyticsResponse.json();
-      console.log('✅ Estadísticas cargadas:', data);
+      console.log(' Estadísticas cargadas:', data);
       setAnalyticsData(data);
 
       // Cargar datos específicos según la pestaña activa
@@ -57,7 +57,7 @@ const AdminReports = ({ userRole }) => {
       }
 
     } catch (error) {
-      console.error('💥 Error cargando analytics:', error);
+      console.error(' Error cargando analytics:', error);
       setError(error.message || 'Error de conexión con el servidor');
     } finally {
       setLoading(false);
@@ -66,21 +66,21 @@ const AdminReports = ({ userRole }) => {
 
   const loadRevenueData = async () => {
     try {
-      console.log('💰 Cargando datos de revenue...');
+      console.log(' Cargando datos de revenue...');
       
       const response = await fetch(`${API_BASE}/analytics/admin/revenue/`, {
         method: 'GET',
         headers: getAuthHeaders()
       });
 
-      console.log('📊 Response status revenue:', response.status);
+      console.log(' Response status revenue:', response.status);
 
       if (!response.ok) {
         throw new Error(`Error ${response.status} al cargar datos de ingresos`);
       }
 
       const data = await response.json();
-      console.log('✅ Datos de revenue:', data);
+      console.log(' Datos de revenue:', data);
       setRevenueData(data);
     } catch (error) {
       console.error('Error cargando datos de ingresos:', error);
@@ -90,21 +90,21 @@ const AdminReports = ({ userRole }) => {
 
   const loadUserData = async () => {
     try {
-      console.log('👥 Cargando datos de usuarios...');
+      console.log(' Cargando datos de usuarios...');
       
       const response = await fetch(`${API_BASE}/analytics/admin/users/`, {
         method: 'GET',
         headers: getAuthHeaders()
       });
 
-      console.log('📊 Response status users:', response.status);
+      console.log(' Response status users:', response.status);
 
       if (!response.ok) {
         throw new Error(`Error ${response.status} al cargar datos de usuarios`);
       }
 
       const data = await response.json();
-      console.log('✅ Datos de usuarios:', data);
+      console.log(' Datos de usuarios:', data);
       setUserData(data);
     } catch (error) {
       console.error('Error cargando datos de usuarios:', error);

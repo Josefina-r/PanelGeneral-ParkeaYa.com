@@ -43,14 +43,28 @@ const OwnerProfile = () => {
       
       if (response.ok) {
         const data = await response.json();
-        console.log('📊 Datos del owner:', data);
-        setOwnerData(data);
+        console.log('📊 Datos del owner (raw):', data);
+
+        const normalized = {
+         
+          ...data,
+          
+          first_name: data.first_name || data.nombre || data.name || (data.full_name ? data.full_name.split(' ')[0] : ''),
+          last_name: data.last_name || data.apellido || (data.full_name ? data.full_name.split(' ').slice(1).join(' ') : ''),
+          phone_number: data.phone_number || data.telefono || data.phone || '',
+          address: data.address || data.direccion || data.address_line || '',
+          is_active: (data.is_active !== undefined) ? data.is_active : (data.activo !== undefined ? data.activo : true),
+      
+          date_joined: data.date_joined || data.created_at || data.fecha_creacion || null
+        };
+
+        setOwnerData(normalized);
         setFormData({
-          first_name: data.first_name || '',
-          last_name: data.last_name || '',
-          email: data.email || '',
-          phone_number: data.telefono  || '',
-          address: data.address || ''
+          first_name: normalized.first_name || '',
+          last_name: normalized.last_name || '',
+          email: normalized.email || '',
+          phone_number: normalized.phone_number || '',
+          address: normalized.address || ''
         });
       } else {
         throw new Error('Error cargando datos del perfil');
@@ -73,8 +87,25 @@ const OwnerProfile = () => {
         const data = await response.json();
         console.log('✅ Estacionamientos cargados:', data);
         setParkingData(data);
+
+        // Si el perfil ya está cargado pero no tiene dirección, rellenarla desde el primer estacionamiento
+        setOwnerData(prev => {
+          try {
+            if (!prev) return prev;
+            if (prev.address && prev.address.trim() !== '') return prev;
+            const first = Array.isArray(data) && data.length > 0 ? data[0] : null;
+            const addr = first ? (first.direccion || first.address || first.location || '') : '';
+            if (addr) {
+              return { ...prev, address: addr };
+            }
+            return prev;
+          } catch (err) {
+            console.warn('No se pudo normalizar dirección desde estacionamientos:', err);
+            return prev;
+          }
+        });
       } else if (response.status === 404) {
-        console.log('ℹ️ No hay estacionamientos registrados');
+        console.log('ℹNo hay estacionamientos registrados');
         setParkingData([]);
       } else {
         throw new Error(`Error ${response.status} cargando estacionamientos`);
@@ -105,7 +136,7 @@ const OwnerProfile = () => {
   const updateOwnerProfile = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_BASE}/users/owner/profile/`, {
+      const response = await fetch(`${API_BASE}/users/owner/me/`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(formData)
@@ -308,7 +339,7 @@ const OwnerProfile = () => {
         <div className="profile-avatar-section">
           <div className="avatar-container">
             <div className="avatar-placeholder">
-              {ownerData?.first_name?.charAt(0)}{ownerData?.last_name?.charAt(0)}
+              {ownerData?.first_name?.charAt(0) || ownerData?.phone_number?.slice(-2) || '?'}{ownerData?.last_name?.charAt(0) || ''}
             </div>
             <div className="online-indicator"></div>
           </div>
@@ -682,7 +713,7 @@ const OwnerProfile = () => {
                             value={parkingForm.telefono}
                             onChange={handleParkingInputChange}
                             required
-                            placeholder="+1 234 567 8900"
+                            placeholder="+51 987 654 321"
                           />
                         </div>
                         
@@ -758,7 +789,7 @@ const OwnerProfile = () => {
                         <div className="form-group">
                           <label>
                             <i className="fas fa-money-bill-wave"></i>
-                            Tarifa por Hora ($) *
+                            Tarifa por Hora (S/) *
                           </label>
                           <input
                             type="number"

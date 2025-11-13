@@ -423,22 +423,7 @@ const AdminUsers = () => {
         )}
       </div>
 
-      {/*  DEBUG INFO */}
-      {error && (
-        <div className="error-message">
-          <i className="fas fa-exclamation-triangle"></i>
-          {error}
-        </div>
-      )}
-
-      <div className="debug-info">
-        <details>
-          <summary>Debug Info</summary>
-          <p>Total usuarios: {users.length}</p>
-          <p>Filtrados: {filteredUsers.length}</p>
-          <p>Seleccionados: {selectedUsers.length}</p>
-        </details>
-      </div>
+      
     </div>
   );
 };

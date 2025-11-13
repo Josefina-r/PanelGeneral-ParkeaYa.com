@@ -119,7 +119,7 @@ const getSectionKey = (path) => {
     '/dashboard/finance': 'finance',
     '/dashboard/system': 'system',
     '/dashboard/reservations': 'reservations',
-    '/dashboard/profile': 'ownerProfile'  // ← CLAVE CORREGIDA
+    '/dashboard/profile': 'ownerProfile'  
   };
   return pathMap[path] || path.split('/').pop();
 };
@@ -131,7 +131,8 @@ function Sidebar({
   stats, 
   userRole, 
   userData,
-  canAccessSection 
+  canAccessSection,
+  onSupportClick 
 }) {
   const menuItems = getMenuItems(userRole);
   const quickStats = getQuickStats(stats, userRole);
@@ -279,7 +280,18 @@ function Sidebar({
               </button>
             )}
             {userRole === 'owner' && (
-              <button className="action-btn support">
+              <button
+                className="action-btn support"
+                onClick={() => {
+                  
+                  try {
+                    onNavigate('/dashboard/support');
+                  } catch (e) {
+                    // fallback: do nothing
+                  }
+                  if (typeof onSupportClick === 'function') onSupportClick();
+                }}
+              >
                 <i className="fas fa-headset"></i>
                 <span>Soporte</span>
               </button>

@@ -30,8 +30,8 @@ const OwnerHome = ({ userRole }) => {
       
       console.log('🏢 Cargando dashboard del propietario...');
       
-      // Endpoint específico para dueños
-      const response = await fetch(`${API_BASE}/parking/dashboard/owner/`, {
+      // Endpoint completo específico para dueños (más detalles: parkings, stats, charts)
+      const response = await fetch(`${API_BASE}/parking/dashboard/owner/complete/`, {
         method: 'GET',
         headers: getAuthHeaders()
       });
@@ -57,30 +57,73 @@ const OwnerHome = ({ userRole }) => {
   };
 
   const processOwnerData = (data) => {
-    // Procesar datos específicos del owner según la estructura de tu API
+   
+    if (data && data.stats && data.parkings) {
+      // owner info
+      const userInfo = data.user || {};
+      const stats = data.stats || {};
+
+      const mappedOwner = {
+        business_name: userInfo.name || userInfo.username || userInfo.email || 'Mi Estacionamiento',
+        email: userInfo.email,
+        average_rating: stats.average_rating || 0,
+        total_reviews: stats.total_reviews || 0,
+        today_earnings: stats.today_revenue || stats.today_revenue || 0,
+        monthly_earnings: stats.monthly_revenue || stats.monthly_revenue || 0,
+        occupancy_rate: stats.total_spaces ? Math.round(((stats.total_spaces - (stats.available_spaces || 0)) / (stats.total_spaces || 1)) * 100) : 0,
+        active_reservations: stats.active_reservations || 0,
+        completed_today: stats.completed_today || 0
+      };
+
+      setOwnerData(mappedOwner);
+
+      const parkings = data.parkings || [];
+      const available = parkings.filter(p => (p.aprobado || p.approved) && (p.activo === undefined ? true : p.activo) && (p.plazas_disponibles !== undefined ? (p.plazas_disponibles > 0) : true));
+      const chosen = available.length > 0 ? available[0] : (parkings.length > 0 ? parkings[0] : null);
+
+      const normalizedParking = chosen ? {
+        id: chosen.id,
+        name: chosen.nombre || chosen.name || '',
+        address: chosen.direccion || chosen.address || '',
+        total_spots: chosen.total_plazas || chosen.total_spots || 0,
+        available_spots: chosen.plazas_disponibles || chosen.available_spots || 0,
+        hourly_rate: chosen.tarifa_hora || chosen.hourly_rate || null,
+        porcentaje_ocupacion: chosen.porcentaje_ocupacion || 0,
+        aprobado: chosen.aprobado,
+        activo: chosen.activo
+      } : null;
+
+      setParkingData(normalizedParking);
+
+      // recientes
+      const recent = (data.recent_activity && data.recent_activity.today_reservations) || [];
+      setRecentReservations(recent);
+
+      return;
+    }
+
     if (data.parking) {
       setParkingData(data.parking);
     } else if (data.parking_lots && data.parking_lots.length > 0) {
-      // Si la API devuelve un array de parking_lots, tomar el primero
       setParkingData(data.parking_lots[0]);
     }
-    
+
     if (data.recent_reservations) {
       setRecentReservations(data.recent_reservations);
     } else if (data.reservations) {
       setRecentReservations(data.reservations);
     }
-    
-    // Si los datos vienen en el formato directo del dashboard
+
     if (data.business_name || data.total_earnings !== undefined) {
       setOwnerData(data);
     }
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('es-CO', {
+    // Mostrar en Soles (PEN) con símbolo S/
+    return new Intl.NumberFormat('es-PE', {
       style: 'currency',
-      currency: 'COP'
+      currency: 'PEN'
     }).format(amount || 0);
   };
 
@@ -163,7 +206,7 @@ const OwnerHome = ({ userRole }) => {
             </span>
             <span className="status active">
               <i className="fas fa-circle"></i>
-              {parkingData?.status === 'active' ? 'Activo' : 'Inactivo'}
+              {(parkingData?.activo === undefined ? true : parkingData?.activo) ? 'Activo' : 'Inactivo'}
             </span>
           </div>
         </div>
@@ -238,7 +281,7 @@ const OwnerHome = ({ userRole }) => {
             <h3>{parkingData?.available_spots || 0}/{parkingData?.total_spots || 0}</h3>
             <p>Espacios Disponibles</p>
             <span className="metric-info">
-              {parkingData?.hourly_rate ? `$${parkingData.hourly_rate}/h` : 'Tarifa no configurada'}
+              {parkingData?.hourly_rate ? `${formatCurrency(parkingData.hourly_rate)}/h` : 'Tarifa no configurada'}
             </span>
           </div>
         </div>
@@ -379,52 +422,46 @@ const OwnerHome = ({ userRole }) => {
           <div className="parking-info-section">
             <div className="info-card">
               <h3>Información del Estacionamiento</h3>
-              
-              <div className="info-item">
-                <strong>Dirección:</strong>
-                <p>{parkingData?.address || 'No configurada'}</p>
-              </div>
-              
-              <div className="info-item">
-                <strong>Espacios Totales:</strong>
-                <span>{parkingData?.total_spots || 0} espacios</span>
-              </div>
-              
-              <div className="info-item">
-                <strong>Tarifa por Hora:</strong>
-                <span>{parkingData?.hourly_rate ? `$${parkingData.hourly_rate}` : 'No configurada'}</span>
-              </div>
-              
-              <div className="info-item">
-                <strong>Características:</strong>
-                <div className="features-list">
-                  {parkingData?.features && parkingData.features.length > 0 ? (
-                    parkingData.features.map(feature => (
-                      <span key={feature} className="feature-tag">
-                        <i className="fas fa-check"></i>
-                        {feature}
-                      </span>
-                    ))
-                  ) : (
-                    <span>No hay características configuradas</span>
-                  )}
-                </div>
-              </div>
-              
-              <div className="info-item">
-                <strong>Horario de Operación:</strong>
-                <div className="operating-hours">
-                  {parkingData?.operating_hours ? (
-                    Object.entries(parkingData.operating_hours).map(([day, hours]) => (
-                      <div key={day} className="hour-item">
-                        <span className="day">{day.charAt(0).toUpperCase() + day.slice(1)}:</span>
-                        <span className="hours">{hours.open} - {hours.close}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <span>No configurado</span>
-                  )}
-                </div>
+
+              <div className="parking-info-table-wrapper">
+                <table className="parking-info-table">
+                  <tbody>
+                    <tr>
+                      <th>Dirección</th>
+                      <td>{parkingData?.address || 'No configurada'}</td>
+                    </tr>
+                    <tr>
+                      <th>Espacios Totales</th>
+                      <td>{parkingData?.total_spots || 0} espacios</td>
+                    </tr>
+                    <tr>
+                      <th>Plazas Disponibles</th>
+                      <td>{parkingData?.available_spots || 0}</td>
+                    </tr>
+                    <tr>
+                      <th>Tarifa por Hora</th>
+                      <td>{parkingData?.hourly_rate ? formatCurrency(parkingData.hourly_rate) : 'No configurada'}</td>
+                    </tr>
+                    <tr>
+                      <th>% Ocupación</th>
+                      <td>{parkingData?.porcentaje_ocupacion ? `${parkingData.porcentaje_ocupacion}%` : '0%'}</td>
+                    </tr>
+                    <tr>
+                      <th>Características</th>
+                      <td>
+                        {parkingData?.features && parkingData.features.length > 0 ? (
+                          <div className="features-inline">
+                            {parkingData.features.map(f => (
+                              <span key={f} className="feature-inline-tag">{f}</span>
+                            ))}
+                          </div>
+                        ) : (
+                          'No hay características'
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
