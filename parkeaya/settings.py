@@ -76,6 +76,7 @@ REST_FRAMEWORK = {
 
 
 
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -110,9 +111,9 @@ WSGI_APPLICATION = 'parkeaya.wsgi.application'
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'parkeya_db',
+        'NAME': 'parkeaya_db',
         'USER': 'postgres',
-        'PASSWORD': 'katherin859!',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '5432',
     }

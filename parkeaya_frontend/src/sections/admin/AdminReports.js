@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AdminReports.css';
 
-const AdminReports = ({ userRole }) => {
+const AdminReports = ({ userRol }) => {
   const [analyticsData, setAnalyticsData] = useState(null);
   const [revenueData, setRevenueData] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -34,7 +34,8 @@ const AdminReports = ({ userRole }) => {
       // Cargar datos principales del dashboard admin
       const analyticsResponse = await fetch(`${API_BASE}/analytics/admin/dashboard/`, {
         method: 'GET',
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
+        credentials: 'include'
       });
 
       console.log(' Response status analytics:', analyticsResponse.status);
@@ -70,7 +71,8 @@ const AdminReports = ({ userRole }) => {
       
       const response = await fetch(`${API_BASE}/analytics/admin/revenue/`, {
         method: 'GET',
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
+        credentials: 'include'
       });
 
       console.log(' Response status revenue:', response.status);
@@ -94,7 +96,8 @@ const AdminReports = ({ userRole }) => {
       
       const response = await fetch(`${API_BASE}/analytics/admin/users/`, {
         method: 'GET',
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
+        credentials: 'include'
       });
 
       console.log(' Response status users:', response.status);
@@ -113,16 +116,18 @@ const AdminReports = ({ userRole }) => {
   };
 
   const formatCurrency = (amount) => {
-    if (!amount) return '$0';
-    return new Intl.NumberFormat('es-CO', {
+    if (!amount) return 'S/ 0.00';
+    return new Intl.NumberFormat('es-PE', {
       style: 'currency',
-      currency: 'COP'
+      currency: 'PEN',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(amount);
   };
 
   const formatNumber = (number) => {
     if (!number) return '0';
-    return new Intl.NumberFormat('es-CO').format(number);
+    return new Intl.NumberFormat('es-PE').format(number);
   };
 
   const handleExport = async (type) => {
@@ -146,7 +151,8 @@ const AdminReports = ({ userRole }) => {
 
       const response = await fetch(endpoint, {
         method: 'GET',
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -352,8 +358,8 @@ const AdminReports = ({ userRole }) => {
                       </span>
                     </div>
                     <div className="performer-info">
-                      <h4>{parking.name}</h4>
-                      <p>Propietario: {parking.owner_name}</p>
+                      <h4>{parking.nombre}</h4>
+                      <p>Propietario: {parking.propietario}</p>
                       <div className="performer-stats">
                         <span className="reservations">
                           <i className="fas fa-calendar"></i>
@@ -570,14 +576,7 @@ const AdminReports = ({ userRole }) => {
           </div>
         )}
       </div>
-
-      {/* MENSAJES DE ERROR */}
-      {error && (
-        <div className="error-message">
-          <i className="fas fa-exclamation-triangle"></i>
-          {error}
-        </div>
-      )}
+      
     </div>
   );
 };

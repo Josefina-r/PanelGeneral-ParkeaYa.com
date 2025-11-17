@@ -50,7 +50,8 @@ const OwnerReports = ({ userRole }) => {
       
       const response = await fetch(`${API_BASE}${endpoint}?period=${timeRange}`, {
         method: 'GET',
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -71,23 +72,26 @@ const OwnerReports = ({ userRole }) => {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('es-CO', {
+    return new Intl.NumberFormat('es-PE', {
       style: 'currency',
-      currency: 'COP'
+      currency: 'PEN',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(amount);
   };
 
   const formatNumber = (number) => {
-    return new Intl.NumberFormat('es-CO').format(number);
+    return new Intl.NumberFormat('es-PE').format(number);
   };
 
   const handleExport = async (format) => {
     try {
       setExportLoading(true);
       
-      const response = await fetch(`${API_BASE}/analytics/owner/export/${reportType}/?period=${timeRange}&format=${format}`, {
+      const response = await fetch(`${API_BASE}/analytics/owner/dashboard/?period=${timeRange}&format=${format}`, {
         method: 'GET',
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -566,14 +570,6 @@ const OwnerReports = ({ userRole }) => {
           </button>
         </div>
       </div>
-
-      {/* DEBUG INFO */}
-      {error && (
-        <div className="error-message">
-          <div className="icon-wrapper">⚠️</div>
-          {error}
-        </div>
-      )}
     </div>
   );
 };

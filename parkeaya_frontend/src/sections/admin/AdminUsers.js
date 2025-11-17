@@ -42,7 +42,7 @@ const AdminUsers = () => {
 
   // Filtrar usuarios según los filtros aplicados
   const filteredUsers = users.filter(user => {
-    const matchesRole = filters.role === 'all' || user.role === filters.role || user.user_type === filters.role;
+    const matchesRole = filters.rol=== 'all' || user.rol=== filters.rol || user.user_type === filters.rol;
     const matchesStatus = filters.status === 'all' || 
       (filters.status === 'active' && user.is_active) ||
       (filters.status === 'inactive' && !user.is_active) ||
@@ -54,18 +54,18 @@ const AdminUsers = () => {
     return matchesRole && matchesStatus && matchesSearch;
   });
 
-  const getRoleBadge = (role) => {
+  const getRoleBadge = (rol) => {
     const roles = {
       admin: { label: 'Administrador', class: 'badge-admin' },
       owner: { label: 'Propietario', class: 'badge-owner' },
       client: { label: 'Cliente', class: 'badge-client' }
     };
-    return roles[role] || { label: role, class: 'badge-default' };
+    return roles[rol] || { label: rol, class: 'badge-default' };
   };
 
   const getStatusBadge = (user) => {
     if (!user.is_active) return { label: 'Inactivo', class: 'status-inactive' };
-    if (user.role === 'owner' && user.document_status === 'pending') return { label: 'Pendiente', class: 'status-pending' };
+    if (user.rol === 'owner' && user.document_status === 'pending') return { label: 'Pendiente', class: 'status-pending' };
     if (user.is_verified) return { label: 'Verificado', class: 'status-active' };
     return { label: 'Activo', class: 'status-active' };
   };
@@ -95,7 +95,7 @@ const AdminUsers = () => {
         const data = await response.json();
         console.log('✅ Usuarios cargados:', data);
 
-        // Si la API devuelve un array directamente
+        
         if (Array.isArray(data)) {
           setUsers(data);
         }
@@ -124,7 +124,7 @@ const AdminUsers = () => {
   // Cargar usuarios inicialmente y cuando cambian filtros
   useEffect(() => {
     loadUsers();
-  }, [loadUsers, filters.role, filters.status]);
+  }, [loadUsers, filters.rol, filters.status]);
 
   const handleUserAction = async (userId, action) => {
     try {
@@ -179,7 +179,7 @@ const AdminUsers = () => {
     try {
       setActionLoading('bulk');
       
-      // Aquí iría la lógica para acciones masivas
+      
       console.log(`Acción ${action} para usuarios:`, selectedUsers);
       
       // Simulamos éxito
@@ -193,15 +193,6 @@ const AdminUsers = () => {
       setActionLoading(null);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="admin-users-loading">
-        <div className="loading-spinner"></div>
-        <p>Cargando gestión de usuarios...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="admin-users">
@@ -224,11 +215,11 @@ const AdminUsers = () => {
           <div className="stat-label">Total Usuarios</div>
         </div>
         <div className="stat-card">
-          <div className="stat-value">{users.filter(u => u.role === 'owner').length}</div>
+          <div className="stat-value">{users.filter(u => u.rol === 'owner').length}</div>
           <div className="stat-label">Propietarios</div>
         </div>
         <div className="stat-card">
-          <div className="stat-value">{users.filter(u => u.role === 'client').length}</div>
+          <div className="stat-value">{users.filter(u => u.rol  === 'client').length}</div>
           <div className="stat-label">Clientes</div>
         </div>
         <div className="stat-card">
@@ -245,8 +236,8 @@ const AdminUsers = () => {
           <div className="filter-group">
             <label>Filtrar por Rol:</label>
             <select 
-              value={filters.role} 
-              onChange={(e) => setFilters(prev => ({ ...prev, role: e.target.value }))}
+              value={filters.rol} 
+              onChange={(e) => setFilters(prev => ({ ...prev, rol: e.target.value }))}
             >
               <option value="all">Todos los roles</option>
               <option value="admin">Administradores</option>
@@ -326,7 +317,7 @@ const AdminUsers = () => {
           </thead>
           <tbody>
             {filteredUsers.map(user => {
-              const roleBadge = getRoleBadge(user.role);
+              const roleBadge = getRoleBadge(user.rol);
               const statusBadge = getStatusBadge(user);
               
               return (
