@@ -1,0 +1,1645 @@
+/* OwnerProfile.css - Diseño Profesional Mejorado */
+.owner-profile {
+  padding: 0;
+  margin: 0 auto;
+}
+
+/* Header del perfil mejorado */
+.profile-header {
+  background: linear-gradient(135deg, var(--dark-card) 0%, rgba(30, 41, 59, 0.95) 100%);
+  border-radius: 24px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--dark-border);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  align-items: start;
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  overflow: hidden;
+
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--owner-primary) 0%, transparent 70%);
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.profile-avatar-section {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.avatar-container {
+  position: relative;
+}
+
+.avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--owner-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: var(--shadow-glow);
+  border: 4px solid var(--dark-card);
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  background: var(--success);
+  border: 3px solid var(--dark-card);
+  border-radius: 50%;
+}
+
+.profile-info h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--owner-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-role {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-email {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-badge.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-badge.inactive {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Stats Grid Mejorado */
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  min-width: 300px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--dark-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--owner-primary);
+  box-shadow: var(--shadow-soft);
+}
+
+.stat-card.primary {
+  border-left: 4px solid var(--owner-primary);
+}
+
+.stat-card.secondary {
+  border-left: 4px solid var(--info);
+}
+
+.stat-card.success {
+  border-left: 4px solid var(--success);
+}
+
+.stat-card.warning {
+  border-left: 4px solid var(--warning);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: var(--owner-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: white;
+}
+
+.stat-card.secondary .stat-icon {
+  background: var(--info);
+}
+
+.stat-card.success .stat-icon {
+  background: var(--success);
+}
+
+.stat-card.warning .stat-icon {
+  background: var(--warning);
+}
+
+.stat-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.stat-content p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Tabs Mejorados */
+.profile-tabs-container {
+  margin-bottom: 2rem;
+}
+
+.profile-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--dark-card);
+  border-radius: 16px;
+  padding: 0.5rem;
+  border: 1px solid var(--dark-border);
+}
+
+.tab-button {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.tab-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.tab-button.active {
+  background: var(--owner-gradient);
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+
+.tab-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Content Wrapper */
+.tab-content-wrapper {
+  background: var(--dark-card);
+  border-radius: 24px;
+  padding: 2.5rem;
+  border: 1px solid var(--dark-border);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Section Header Mejorado */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-title h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.section-title .fas {
+  font-size: 1.5rem;
+  color: var(--owner-primary);
+}
+
+.section-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  font-weight: 400;
+}
+
+/* Botones Mejorados */
+.edit-btn,
+.add-parking-btn {
+  padding: 0.875rem 1.5rem;
+  border: 1px solid var(--dark-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-btn:hover,
+.add-parking-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--owner-primary);
+  transform: translateY(-1px);
+}
+
+.edit-btn.cancel {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.edit-btn.cancel:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.add-parking-btn.primary {
+  background: var(--owner-gradient);
+  color: white;
+  border: none;
+}
+
+.add-parking-btn.primary:hover {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Info Grid Mejorado */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--dark-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  border-color: var(--owner-primary);
+  transform: translateY(-2px);
+}
+
+.info-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: rgba(0, 184, 148, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--owner-primary);
+  flex-shrink: 0;
+}
+
+.info-content label {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.info-content p {
+  color: var(--text-primary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status.inactive {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status.approved {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status.pending {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Form Styles Mejorados */
+.profile-form {
+  max-width: 800px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--dark-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--owner-primary);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.disabled-input {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.save-btn {
+  padding: 1rem 2rem;
+  background: var(--owner-gradient);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.save-btn:hover {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Parking Form Modal */
+.parking-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.modal-content {
+  background: var(--dark-card);
+  border-radius: 24px;
+  border: 1px solid var(--dark-border);
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-hard);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.modal-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+
+.parking-form {
+  padding: 2rem;
+}
+
+.form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-column h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.services-section {
+  margin-bottom: 2rem;
+}
+
+.services-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.service-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.service-checkbox:hover {
+  border-color: var(--owner-primary);
+  background: rgba(0, 184, 148, 0.05);
+}
+
+.service-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--text-secondary);
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.service-checkbox input[type="checkbox"]:checked+.checkmark {
+  background: var(--owner-primary);
+  border-color: var(--owner-primary);
+}
+
+.service-checkbox input[type="checkbox"]:checked+.checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.cancel-btn {
+  padding: 1rem 2rem;
+  border: 1px solid var(--dark-border);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.submit-btn {
+  padding: 1rem 2rem;
+  background: var(--owner-gradient);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.submit-btn:hover {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+/* Parking Grid Mejorado */
+.parking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.parking-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--dark-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.parking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--owner-primary);
+}
+
+.parking-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--owner-gradient);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.parking-card:hover::before {
+  opacity: 1;
+}
+
+.parking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.parking-title h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.parking-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.parking-rating {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.stars {
+  color: #fbbf24;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.parking-rating span {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.parking-info {
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.info-item .fas {
+  width: 16px;
+  color: var(--owner-primary);
+}
+
+.parking-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.action-btn {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--dark-border);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.action-btn.edit:hover {
+  background: var(--owner-gradient);
+  color: white;
+  border-color: transparent;
+}
+
+.action-btn.view:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.action-btn.stats:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+/* Security Section Mejorada */
+.security-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.security-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--dark-border);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.security-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--owner-primary);
+}
+
+.security-card.warning {
+  border-color: var(--warning);
+}
+
+.security-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: rgba(0, 184, 148, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--owner-primary);
+  flex-shrink: 0;
+}
+
+.security-card.warning .security-icon {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+.security-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.security-content p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.security-btn {
+  padding: 0.875rem 1.5rem;
+  border: 1px solid var(--dark-border);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.security-btn.primary:hover {
+  background: var(--owner-gradient);
+  color: white;
+  border-color: transparent;
+}
+
+.security-btn.secondary:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.security-btn.danger {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.security-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Empty State Mejorado */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed var(--dark-border);
+  border-radius: 20px;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.7;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+/* Estados de carga */
+.profile-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.profile-loading .loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--owner-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .profile-header {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .profile-stats-grid {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .owner-profile {
+    padding: 1rem;
+  }
+
+  .profile-header {
+    padding: 1.5rem;
+  }
+
+  .profile-avatar-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .avatar-container {
+    align-self: center;
+  }
+
+  .profile-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-tabs {
+    flex-direction: column;
+  }
+
+  .tab-content-wrapper {
+    padding: 1.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .form-grid,
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .parking-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .security-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .form-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .parking-form-modal {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+  }
+
+  .parking-form {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-info h1 {
+    font-size: 1.75rem;
+  }
+
+  .avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    font-size: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .parking-actions {
+    flex-direction: column;
+  }
+}
+
+/* Modales de Estacionamiento - ESTILOS FALTANTES */
+.parking-view-modal,
+.parking-edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 2rem;
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+
+.parking-view-modal .modal-content,
+.parking-edit-modal .modal-content {
+  background: var(--dark-card);
+  border-radius: 24px;
+  border: 1px solid var(--dark-border);
+  width: 90%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-hard);
+  transform: scale(1);
+  opacity: 1;
+  animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-body .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.modal-body .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-body .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dark-border);
+}
+
+/* Estilos específicos para imágenes en modales */
+.parking-main-image {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.parking-main-image img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow-medium);
+}
+
+.parking-images-gallery {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.parking-images-gallery img {
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.3s ease;
+}
+
+.parking-images-gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Mejora los estilos del formulario en el modal de edición */
+.parking-edit-modal .modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.parking-edit-modal .form-group label {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.parking-edit-modal .form-group input,
+.parking-edit-modal .form-group textarea,
+.parking-edit-modal .form-group select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--dark-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.parking-edit-modal .form-group input:focus,
+.parking-edit-modal .form-group textarea:focus,
+.parking-edit-modal .form-group select:focus {
+  outline: none;
+  border-color: var(--owner-primary);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+}
+
+.parking-edit-modal .form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Estilos para la vista de detalles */
+.parking-view-modal .modal-body p {
+  margin-bottom: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.parking-view-modal .modal-body p strong {
+  color: var(--owner-primary);
+  min-width: 140px;
+  display: inline-block;
+}
+
+/* Servicios en modal de edición */
+.services-section-modal {
+  margin: 1.5rem 0;
+}
+
+.services-section-modal h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.services-grid-modal {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.service-checkbox-modal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--dark-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+}
+
+.service-checkbox-modal:hover {
+  border-color: var(--owner-primary);
+  background: rgba(0, 184, 148, 0.05);
+}
+
+.service-checkbox-modal input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark-modal {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--text-secondary);
+  border-radius: 3px;
+  position: relative;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.service-checkbox-modal input[type="checkbox"]:checked+.checkmark-modal {
+  background: var(--owner-primary);
+  border-color: var(--owner-primary);
+}
+
+.service-checkbox-modal input[type="checkbox"]:checked+.checkmark-modal::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* Responsive para modales */
+@media (max-width: 768px) {
+
+  .parking-view-modal,
+  .parking-edit-modal {
+    padding: 1rem;
+  }
+
+  .parking-view-modal .modal-content,
+  .parking-edit-modal .modal-content {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-body .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .services-grid-modal {
+    grid-template-columns: 1fr;
+  }
+
+  .parking-images-gallery {
+    justify-content: center;
+  }
+
+  .parking-images-gallery img {
+    width: 100px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+
+  .modal-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-body .form-actions {
+    flex-direction: column;
+  }
+
+  .modal-body .form-actions button {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   MODAL: VER DETALLES - MEJORAS DE IMÁGENES
+   ============================================ */
+
+.parking-view-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.parking-view-modal .modal-content {
+  background: #1a2332;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.parking-view-modal .modal-header {
+  padding: 25px;
+  border-bottom: 2px solid #2c3e50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #0f3460 0%, #1a5276 100%);
+}
+
+.parking-view-modal .modal-header h3 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 24px;
+}
+
+.parking-view-modal .close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.parking-view-modal .close-btn:hover {
+  transform: scale(1.2);
+}
+
+.parking-view-modal .modal-body {
+  padding: 30px;
+  color: #e0e0e0;
+}
+
+/* IMAGEN PRINCIPAL */
+.parking-view-modal .parking-main-image {
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #243447;
+  border-radius: 8px;
+  border-left: 4px solid #0f3460;
+}
+
+.parking-view-modal .parking-main-image h4 {
+  color: #ffffff;
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.parking-view-modal .parking-main-image img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #0f1e2e;
+  display: block;
+}
+
+/* GALERÍA DE IMÁGENES */
+.parking-view-modal .parking-images-gallery {
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #243447;
+  border-radius: 8px;
+  border-left: 4px solid #0f3460;
+}
+
+.parking-view-modal .parking-images-gallery h4 {
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.parking-view-modal .parking-images-gallery img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #0f1e2e;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.parking-view-modal .parking-images-gallery img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 15px rgba(15, 52, 96, 0.5);
+}
+
+/* INFORMACIÓN DEL ESTACIONAMIENTO */
+.parking-view-modal .modal-body>div:last-child {
+  border-top: 2px solid #2c3e50;
+  padding-top: 30px;
+}
+
+.parking-view-modal .modal-body>div:last-child h4 {
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.parking-view-modal .modal-body div[style*="display: grid"] p {
+  color: #e0e0e0;
+}
+
+.parking-view-modal .modal-body p[style*="fontWeight: bold"] {
+  color: #64b5f6 !important;
+  font-weight: 600 !important;
+}
+
+.parking-view-modal .modal-body p[style*="fontSize: 18px"] {
+  color: #4fc3f7 !important;
+  font-weight: bold !important;
+}
+
+.parking-view-modal .modal-body p[style*="fontSize: 20px"] {
+  color: #81d4fa !important;
+  font-weight: bold !important;
+}
+
+.parking-view-modal .modal-body p[style*="color: #999"] {
+  color: #90caf9 !important;
+}
+
+.parking-view-modal .modal-body p[style*="background: #f5f5f5"] {
+  background: #2c3e50 !important;
+  color: #eceff1 !important;
+  border-left: 4px solid #0f3460;
+  padding: 15px !important;
+}
+
+/* ============================================
+   MODAL: EDITAR ESTACIONAMIENTO
+   ============================================ */
+
+.parking-edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.parking-edit-modal .modal-content {
+  background: #1a2332;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.parking-edit-modal .modal-header {
+  padding: 25px;
+  border-bottom: 2px solid #2c3e50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #0f3460 0%, #1a5276 100%);
+}
+
+.parking-edit-modal .modal-header h3 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 24px;
+}
+
+.parking-edit-modal .modal-body {
+  padding: 30px;
+}
+
+.parking-edit-modal .form-group {
+  margin-bottom: 20px;
+}
+
+.parking-edit-modal .form-group label {
+  color: #64b5f6;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.parking-edit-modal .form-group input,
+.parking-edit-modal .form-group select,
+.parking-edit-modal .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  background: #243447;
+  border: 1px solid #0f3460;
+  color: #ffffff;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.parking-edit-modal .form-group input:focus,
+.parking-edit-modal .form-group select:focus,
+.parking-edit-modal .form-group textarea:focus {
+  outline: none;
+  border-color: #64b5f6;
+  box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.1);
+}
