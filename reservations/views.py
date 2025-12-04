@@ -277,14 +277,13 @@ class ReservationViewSet(viewsets.ModelViewSet):
             )
 
         # Validar tipo de reserva
-        if tipo_reserva == 'dia' and not hasattr(parking, 'precio_dia'):
+        # ✅ MEJORADO: Aceptar 'hora', 'dia', 'mes' sin requerir campos específicos en parking
+        # El sistema calculará el costo basado en tarifa_hora
+        tipo_reserva = data.get('tipo_reserva', 'hora').lower()
+        
+        if tipo_reserva not in ['hora', 'dia', 'mes']:
             return Response(
-                {'tipo_reserva': ['Este estacionamiento no acepta reservas por día.']},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        elif tipo_reserva == 'mes' and not hasattr(parking, 'precio_mes'):
-            return Response(
-                {'tipo_reserva': ['Este estacionamiento no acepta reservas por mes.']},
+                {'tipo_reserva': ['Tipo de reserva inválido. Use: "hora", "dia" o "mes".']},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -296,12 +295,12 @@ class ReservationViewSet(viewsets.ModelViewSet):
             )
         elif tipo_reserva == 'dia' and duracion_minutos < 1440:
             return Response(
-                {'duracion_minutos': ['La duración mínima para reserva por día es 24 horas.']},
+                {'duracion_minutos': ['La duración mínima para reserva por día es 1440 minutos (24 horas).']},
                 status=status.HTTP_400_BAD_REQUEST
             )
         elif tipo_reserva == 'mes' and duracion_minutos < 43200:
             return Response(
-                {'duracion_minutos': ['La duración mínima para reserva por mes es 30 días.']},
+                {'duracion_minutos': ['La duración mínima para reserva por mes es 43200 minutos (30 días).']},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
