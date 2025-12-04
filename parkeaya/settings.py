@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'complaints',
     'django_extensions',
     'analytic',
+    'terms',
 ]
 
 # Gmail SMTP Configuration

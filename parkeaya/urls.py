@@ -57,6 +57,7 @@ urlpatterns = [
     # Compatibilidad: ruta singular usada por cliente Android antiguo
     path('api/reservation/', ReservationViewSet.as_view({'post': 'create'})),
     
+    path('api/terms/', include('terms.urls')),
 
      path('api/', include('parking.urls')),    
     
